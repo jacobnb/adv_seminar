@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 664623252}
   - component: {fileID: 664623251}
   - component: {fileID: 664623255}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: blue_rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &664623252
 BoxCollider2D:
@@ -307,8 +307,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 664623250}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.52, y: -1.18, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4.52, y: -2.54, z: 0}
+  m_LocalScale: {x: 1, y: 0.59, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -326,7 +326,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNum: 1
   moveSpeed: 20
-  jumpHeight: 1000
+  jumpHeight: 700
+  groundDistance: 3.02
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!1 &1337790760
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +343,7 @@ GameObject:
   - component: {fileID: 1337790762}
   - component: {fileID: 1337790761}
   - component: {fileID: 1337790765}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: green_rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -444,8 +448,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1337790760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.88, y: -1.32, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.88, y: -2.54, z: 0}
+  m_LocalScale: {x: 1, y: 0.59, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -463,7 +467,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNum: 2
   moveSpeed: 20
-  jumpHeight: 1000
+  jumpHeight: 700
+  groundDistance: 3.02
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!1 &1372324643
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +483,7 @@ GameObject:
   - component: {fileID: 1372324646}
   - component: {fileID: 1372324645}
   - component: {fileID: 1372324644}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,7 +620,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1779074912}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -644,7 +652,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -702,8 +710,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1779074912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.175, y: -0.454, z: 0}
-  m_LocalScale: {x: 0.81628525, y: 3.866, z: 1}
+  m_LocalPosition: {x: 9.175, y: 17.37, z: 0}
+  m_LocalScale: {x: 0.81628525, y: 23.64, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -734,7 +742,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1951805591}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -766,7 +774,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -824,8 +832,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1951805591}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.26, y: -0.45, z: 0}
-  m_LocalScale: {x: 0.81628525, y: 3.866, z: 1}
+  m_LocalPosition: {x: -9.26, y: 17.37, z: 0}
+  m_LocalScale: {x: 0.81628525, y: 23.64, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5

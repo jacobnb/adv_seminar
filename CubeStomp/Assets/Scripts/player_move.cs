@@ -8,16 +8,14 @@ public class player_move : MonoBehaviour {
     public float jumpHeight = 10;
     private float moveDirection;
     bool shouldJump, canJump, doubleJump;
+    public float groundDistance = 3.02f;
     private Rigidbody2D rb;
-    private ContactFilter2D groundFilter;
+    public LayerMask groundMask;
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
         canJump = true;
         doubleJump = true;
-        groundFilter.SetLayerMask(
-            LayerMask.NameToLayer("Ground")
-        );
 	}
 	
 	// Update is called once per frame
@@ -74,6 +72,10 @@ public class player_move : MonoBehaviour {
     }
 
     void checkForGround() {
-        RaycastHit2D hitGround = Physics2D.raycast //set up raycast mask in start.
+        RaycastHit2D hitGround = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
+        if(hitGround.collider){
+            canJump = true;
+            shouldJump = true;
+        }
     }
 }
