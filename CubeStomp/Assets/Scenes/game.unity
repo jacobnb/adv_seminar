@@ -324,9 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
-  jumpHeight: 0
   playerNum: 1
+  moveSpeed: 20
+  jumpHeight: 1000
 --- !u!1 &1337790760
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,9 +461,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
-  jumpHeight: 0
   playerNum: 2
+  moveSpeed: 20
+  jumpHeight: 1000
 --- !u!1 &1372324643
 GameObject:
   m_ObjectHideFlags: 0

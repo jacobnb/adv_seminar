@@ -9,23 +9,32 @@ public class player_move : MonoBehaviour {
     private float moveDirection;
     bool shouldJump, canJump, doubleJump;
     private Rigidbody2D rb;
+    private ContactFilter2D groundFilter;
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
+        canJump = true;
+        doubleJump = true;
+        groundFilter.SetLayerMask(
+            LayerMask.NameToLayer("Ground")
+        );
 	}
 	
 	// Update is called once per frame
 	void Update () {
         getInput();
         movePlayer();
+        checkForGround();
 	}
 
     void getInput() {
         if(playerNum == 1 ){
             moveDirection = Input.GetAxis("Horizontal");
+            shouldJump = Input.GetKeyDown("up");
         }
         else if (playerNum == 2){
             moveDirection = Input.GetAxis("Horizontal2");
+            shouldJump = Input.GetKeyDown("w");
         }
         else {
             Debug.Log("Invalid player num");
@@ -33,19 +42,38 @@ public class player_move : MonoBehaviour {
     }
 
     void movePlayer() {
-        rb.AddForce(new Vector2(moveDirection*moveSpeed, 0f));
+        //rb.AddForce(new Vector2(moveDirection*moveSpeed, 0f));
+        Vector2 velocity = rb.velocity;
+        velocity.x = moveDirection*moveSpeed;
+        rb.velocity = velocity;
+
         if(shouldJump){
             if(checkJump()){
                 jump();
-                //working on this
             }
+            shouldJump = false;
         }
     }
 
     bool checkJump(){
-        return true;
+        if(canJump){
+            canJump = false;
+            return true;
+        }
+        else if (doubleJump){
+            doubleJump = false;
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
     void jump(){
         rb.AddForce(new Vector2(0f, jumpHeight));
+    }
+
+    void checkForGround() {
+        RaycastHit2D hitGround = Physics2D.raycast //set up raycast mask in start.
     }
 }
