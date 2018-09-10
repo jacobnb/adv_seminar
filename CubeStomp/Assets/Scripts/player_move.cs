@@ -11,11 +11,13 @@ public class player_move : MonoBehaviour {
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
     public LayerMask groundMask;
+    private Transform bottomCollider;
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
         canJump = true;
         doubleJump = true;
+        bottomCollider = transform.Find("Bottom Collider");
 	}
 	
 	// Update is called once per frame
@@ -72,10 +74,16 @@ public class player_move : MonoBehaviour {
     }
 
     void checkForGround() {
-        RaycastHit2D hitGround = Physics2D.Raycast(transform.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
+        Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
+        RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
+        //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
         if(hitGround.collider){
             canJump = true;
             shouldJump = true;
         }
     }
+    void OnColliderEnter(Collider col){
+		Debug.Log("NOT Bottom Collider 2");
+	}
+
 }
