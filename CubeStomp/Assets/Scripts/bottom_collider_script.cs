@@ -22,4 +22,12 @@ public class bottom_collider_script : MonoBehaviour {
         playerScript.canJump = true;
         playerScript.doubleJump = true;
     }
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Player"))
+        {
+            Debug.Log("Hit Player");
+        }
+        playerScript.canJump = false;
+    }
 }

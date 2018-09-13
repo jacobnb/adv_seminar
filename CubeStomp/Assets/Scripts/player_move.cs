@@ -71,6 +71,7 @@ public class player_move : MonoBehaviour {
 
     }
     void jump(){
+        rb.velocity = new Vector2(rb.velocity.x, 0.0f);
         rb.AddForce(new Vector2(0f, jumpHeight));
     }
 
