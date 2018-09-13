@@ -7,7 +7,8 @@ public class player_move : MonoBehaviour {
     public float moveSpeed = 10;
     public float jumpHeight = 10;
     private float moveDirection;
-    public bool shouldJump, canJump, doubleJump;
+    public bool shouldJump, canJump, doubleJump; 
+    //^public to be accessed by the bottom_collider_script
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
     public LayerMask groundMask;
@@ -73,20 +74,14 @@ public class player_move : MonoBehaviour {
         rb.AddForce(new Vector2(0f, jumpHeight));
     }
 
-    void OnDrawGizmos(){
-        //Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
-       // Gizmos.DrawCube(bottomCollider.position, new Vector3(boxSize.x, boxSize.y, 1.0f));
-    }
     void checkForGround() {
-        
-            Debug.Log("jump enabled");
         Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
         RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
         Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
         //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
         if(hitGround.collider){
-            canJump = true;
-            doubleJump = true;
+            //canJump = true;
+            //doubleJump = true;
         }
     }
     void OnColliderEnter(Collider col){
