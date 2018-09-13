@@ -13,6 +13,7 @@ public class player_move : MonoBehaviour {
     private Rigidbody2D rb;
     public LayerMask groundMask;
     private Transform bottomCollider;
+    public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
@@ -26,8 +27,21 @@ public class player_move : MonoBehaviour {
         getInput();
         movePlayer();
         checkForGround();
+        checkForDamage();
 	}
 
+    void checkForDamage()
+    {
+        if(canJump && touching_enemyBottom)
+        {
+            Debug.Log("Got Smashed");
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.01f, transform.localScale.z);
+            if(transform.localScale.y < 0.01)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
     void getInput() {
         if(playerNum == 1 ){
             moveDirection = Input.GetAxis("Horizontal");

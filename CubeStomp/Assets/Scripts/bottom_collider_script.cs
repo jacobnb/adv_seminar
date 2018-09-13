@@ -14,10 +14,10 @@ public class bottom_collider_script : MonoBehaviour {
 		
 	}
 
-	void OnTriggerEnter2D(Collider2D col)
+	void OnTriggerStay2D(Collider2D col)
     {
         if(col.CompareTag("Player")){
-			Debug.Log("Hit Player");
+            col.GetComponent<player_move>().touching_enemyBottom = true;
 		}
         playerScript.canJump = true;
         playerScript.doubleJump = true;
@@ -26,7 +26,7 @@ public class bottom_collider_script : MonoBehaviour {
     {
         if (col.CompareTag("Player"))
         {
-            Debug.Log("Hit Player");
+            col.GetComponent<player_move>().touching_enemyBottom = false;
         }
         playerScript.canJump = false;
     }
