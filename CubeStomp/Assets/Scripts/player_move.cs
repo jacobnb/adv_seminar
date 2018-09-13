@@ -7,12 +7,16 @@ public class player_move : MonoBehaviour {
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
+    public float smashSpeed = 1200;
+    public float frozenTime = 0.5f;
     private float moveDirection;
-    public bool shouldJump, canJump, doubleJump; 
+    public bool shouldJump, canJump, doubleJump, shouldSmash;
+    bool isFrozen; 
     //^public to be accessed by the bottom_collider_script
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
     public LayerMask groundMask;
+    public LayerMask playerMask;
     private Transform bottomCollider;
     public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
 	// Use this for initialization
@@ -27,14 +31,15 @@ public class player_move : MonoBehaviour {
 	void Update () {
         getInput();
         movePlayer();
-        checkForGround();
         checkForDamage();
 	}
-
+    public IEnumerator freeze(float frozenTime){
+        isFrozen = true;
+        yield return new WaitForSeconds(frozenTime);
+        isFrozen = false;
+    }
     IEnumerator loadScene1(float delay){
-        Debug.Log("Corouting Starting");
         yield return new WaitForSeconds(delay);
-        Debug.Log("loading Scene");
         SceneManager.LoadScene(0);
     }
     void checkForDamage()
@@ -55,14 +60,28 @@ public class player_move : MonoBehaviour {
             }
         }
     }
+    void smash(){
+        rb.velocity = new Vector2(0.0f, 0.0f);
+        rb.AddForce(new Vector2(0f, -smashSpeed));
+        //raycast down, if hit player freeze player.
+        //example StartCoroutine(Camera.main.GetComponent<myTimer>().Counter());
+        Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
+        RaycastHit2D hitPlayer = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, 100f, playerMask);
+        if(hitPlayer.collider){
+            StartCoroutine(hitPlayer.transform.GetComponent<player_move>().freeze(frozenTime));
+        }
+        StartCoroutine("freeze", 2*frozenTime);
+    }
     void getInput() {
         if(playerNum == 1 ){
             moveDirection = Input.GetAxis("Horizontal");
             shouldJump = Input.GetKeyDown("up");
+            shouldSmash = Input.GetKeyDown("down");
         }
         else if (playerNum == 2){
             moveDirection = Input.GetAxis("Horizontal2");
             shouldJump = Input.GetKeyDown("w");
+            shouldSmash = Input.GetKeyDown("s");
         }
         else {
             Debug.Log("Invalid player num");
@@ -70,11 +89,17 @@ public class player_move : MonoBehaviour {
     }
 
     void movePlayer() {
-        //rb.AddForce(new Vector2(moveDirection*moveSpeed, 0f));
+        if(isFrozen){
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            return;
+        }
+
         Vector2 velocity = rb.velocity;
         velocity.x = moveDirection*moveSpeed;
         rb.velocity = velocity;
-
+        if(shouldSmash && !canJump){
+            smash();
+        }
         if(shouldJump){
             if(checkJump()){
                 jump();
@@ -105,7 +130,7 @@ public class player_move : MonoBehaviour {
     void checkForGround() {
         Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
         RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-        Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
+        //Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
         //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
         if(hitGround.collider){
             //canJump = true;

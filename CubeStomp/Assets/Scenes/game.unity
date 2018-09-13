@@ -621,13 +621,19 @@ MonoBehaviour:
   playerNum: 1
   moveSpeed: 20
   jumpHeight: 900
+  smashSpeed: 1200
+  frozenTime: 0.25
   shouldJump: 0
   canJump: 0
   doubleJump: 0
+  shouldSmash: 0
   groundDistance: 0.05
   groundMask:
     serializedVersion: 2
     m_Bits: 768
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 512
   touching_enemyBottom: 0
   touching_enemySide: 0
   touching_enemyTop: 0
@@ -845,13 +851,19 @@ MonoBehaviour:
   playerNum: 2
   moveSpeed: 20
   jumpHeight: 900
+  smashSpeed: 1200
+  frozenTime: 0.25
   shouldJump: 0
   canJump: 0
   doubleJump: 0
+  shouldSmash: 0
   groundDistance: 0.25
   groundMask:
     serializedVersion: 2
     m_Bits: 768
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 512
   touching_enemyBottom: 0
   touching_enemySide: 0
   touching_enemyTop: 0
