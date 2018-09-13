@@ -11,7 +11,6 @@ public class bottom_collider_script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
 	void OnTriggerStay2D(Collider2D col)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class player_move : MonoBehaviour {
     public int playerNum;
@@ -30,14 +31,27 @@ public class player_move : MonoBehaviour {
         checkForDamage();
 	}
 
+    IEnumerator loadScene1(float delay){
+        Debug.Log("Corouting Starting");
+        yield return new WaitForSeconds(delay);
+        Debug.Log("loading Scene");
+        SceneManager.LoadScene(0);
+    }
     void checkForDamage()
     {
         if(!touching_enemySide && canJump && touching_enemyBottom)
         {
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.01f, transform.localScale.z);
+            bottomCollider.localScale = new Vector3(bottomCollider.localScale.x, bottomCollider.localScale.y + 0.05f, bottomCollider.localScale.z);
+            //this is a hack to keep the bottom collider the right size.
+
             if(transform.localScale.y < 0.01)
             {
-                gameObject.SetActive(false);
+                
+                StartCoroutine("loadScene1", 2f);
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                bottomCollider.gameObject.SetActive(false);
             }
         }
     }
