@@ -6,7 +6,6 @@ public class bottom_collider_script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log("Bottom Script");
 	}
 	
 	// Update is called once per frame
@@ -14,13 +13,10 @@ public class bottom_collider_script : MonoBehaviour {
 		
 	}
 
-
-	//=== neither of these are working===//
-	void OnTriggerEnter2D(Collider2D col){
-		Debug.Log("Bottom Collider Colliding");
-	}
-
-	void OnColliderEnter2D(Collider2D col){
-		Debug.Log("Bottom Collider 2");
-	}
+	void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.CompareTag("Player")){
+			Debug.Log("Hit Player");
+		}
+    }
 }
