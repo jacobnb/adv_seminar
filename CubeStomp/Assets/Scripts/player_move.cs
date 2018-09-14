@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class player_move : MonoBehaviour {
+    public player_move enemy_moveScript;
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
@@ -125,8 +126,13 @@ public class player_move : MonoBehaviour {
     void jump(){
         rb.velocity = new Vector2(rb.velocity.x, 0.0f);
         rb.AddForce(new Vector2(0f, jumpHeight));
+        if(touching_enemySide || touching_enemyTop){
+            enemy_moveScript.jumpedOff();
+        }
     }
-
+    public void jumpedOff(){
+        rb.AddForce(new Vector2(0f, -jumpHeight));
+    }
     void checkForGround() {
         Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
         RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.

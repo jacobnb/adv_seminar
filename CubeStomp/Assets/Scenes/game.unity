@@ -519,7 +519,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &664623252
 BoxCollider2D:
@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy_moveScript: {fileID: 1337790765}
   playerNum: 1
   moveSpeed: 20
   jumpHeight: 900
@@ -749,7 +750,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: 3b2d4448d8ecb984f895e9ed107d3794, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1337790762
 BoxCollider2D:
@@ -848,6 +849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy_moveScript: {fileID: 664623255}
   playerNum: 2
   moveSpeed: 20
   jumpHeight: 900
