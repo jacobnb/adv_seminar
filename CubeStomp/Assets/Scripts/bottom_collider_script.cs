@@ -27,6 +27,8 @@ public class bottom_collider_script : MonoBehaviour {
         {
             col.GetComponent<player_move>().touching_enemyBottom = false;
         }
-        playerScript.canJump = false;
+        else{
+            playerScript.canJump = false;
+        }
     }
 }
