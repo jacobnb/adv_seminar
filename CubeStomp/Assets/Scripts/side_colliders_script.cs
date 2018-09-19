@@ -16,7 +16,7 @@ public class side_colliders_script : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D col){
-        playerScript.doubleJump = true;
+        playerScript.wallJump = true;
     }
 
 	void OnTriggerStay2D(Collider2D col)

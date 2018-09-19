@@ -11,7 +11,7 @@ public class player_move : MonoBehaviour {
     public float smashSpeed = 1200;
     public float frozenTime = 0.5f;
     private float moveDirection;
-    public bool shouldJump, canJump, doubleJump, shouldSmash;
+    public bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
     bool isFrozen; 
     //^public to be accessed by the bottom_collider_script
     public float groundDistance = 3.02f;
@@ -112,6 +112,11 @@ public class player_move : MonoBehaviour {
     bool checkJump(){
         if(canJump){
             canJump = false;
+            wallJump = false;
+            return true;
+        }
+        else if(wallJump){
+            wallJump=false;
             return true;
         }
         else if (doubleJump){
