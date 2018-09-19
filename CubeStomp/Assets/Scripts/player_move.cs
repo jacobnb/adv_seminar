@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class player_move : MonoBehaviour {
     public player_move enemy_moveScript;
@@ -13,6 +12,7 @@ public class player_move : MonoBehaviour {
     private float moveDirection;
     public bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
     bool isFrozen; 
+    private game_controller_script gcs;
     //^public to be accessed by the bottom_collider_script
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
@@ -23,9 +23,13 @@ public class player_move : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
+        Debug.Assert(rb);
+        gcs = game_controller_script.GAME_CONTROLLER;
+        Debug.Assert(gcs);
         canJump = true;
         doubleJump = true;
         bottomCollider = transform.Find("Bottom Collider");
+
 	}
 	
 	// Update is called once per frame
@@ -39,10 +43,7 @@ public class player_move : MonoBehaviour {
         yield return new WaitForSeconds(frozenTime);
         isFrozen = false;
     }
-    IEnumerator loadScene1(float delay){
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(0);
-    }
+
     void checkForDamage()
     {
         if(!touching_enemySide && canJump && touching_enemyBottom)
@@ -53,11 +54,8 @@ public class player_move : MonoBehaviour {
 
             if(transform.localScale.y < 0.01)
             {
-                
-                StartCoroutine("loadScene1", 2f);
-                gameObject.GetComponent<SpriteRenderer>().enabled = false;
-                gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                bottomCollider.gameObject.SetActive(false);
+                gcs.playerWon(playerNum);
+                gameObject.SetActive(false);
             }
         }
     }
