@@ -11,9 +11,10 @@ public class player_move : MonoBehaviour {
     public float frozenTime = 0.5f;
     private float moveDirection;
     public bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
+    //^public to be accessed by the bottom_collider_script
     bool isFrozen; 
     private game_controller_script gcs;
-    //^public to be accessed by the bottom_collider_script
+    private cube_spitter_script cubeSpitter;
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
     public LayerMask groundMask;
@@ -26,10 +27,17 @@ public class player_move : MonoBehaviour {
         Debug.Assert(rb);
         gcs = game_controller_script.GAME_CONTROLLER;
         Debug.Assert(gcs);
+        cubeSpitter = gameObject.GetComponentInChildren<cube_spitter_script>();
+        Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
         bottomCollider = transform.Find("Bottom Collider");
-
+        if(gameObject.name == ("Player1")){
+            playerNum = 1;
+        }
+        else if (gameObject.name == "Player2"){
+            playerNum = 2;
+        }
 	}
 	
 	// Update is called once per frame
@@ -48,6 +56,7 @@ public class player_move : MonoBehaviour {
     {
         if(!touching_enemySide && canJump && touching_enemyBottom)
         {
+            StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.01f, transform.localScale.z);
             bottomCollider.localScale = new Vector3(bottomCollider.localScale.x, bottomCollider.localScale.y + 0.05f, bottomCollider.localScale.z);
             //this is a hack to keep the bottom collider the right size.
