@@ -32,22 +32,31 @@ public class game_controller_script : MonoBehaviour {
 		player2Text.text = player2Score.ToString();
 	}
 
-	public void playerWon(int playerNum){
-		if(playerNum == 1){
+	public void playerLost(int playerNum){
+		if(playerNum == 2){
 			player1Score++;
 		}
-		else if(playerNum ==2){
+		else if(playerNum ==1){
 			player2Score++;
 		}
 		else{
 			Debug.LogError("Unknown Player Number");
 		}
-		StartCoroutine("loadScene1", 2f);
+		if ((player1Score + player2Score) % 2 == 0){
+			StartCoroutine("loadScene1", 2f);			
+		}
+		else {
+			StartCoroutine("loadScene2", 2f);
+		}
 		updateScore();
 	}
 
 	IEnumerator loadScene1(float delay){
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(0);
+    }
+	IEnumerator loadScene2(float delay){
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(1);
     }
 }

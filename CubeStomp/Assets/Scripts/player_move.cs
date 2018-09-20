@@ -54,7 +54,7 @@ public class player_move : MonoBehaviour {
 
             if(transform.localScale.y < 0.01)
             {
-                gcs.playerWon(playerNum);
+                gcs.playerLost(playerNum);
                 gameObject.SetActive(false);
             }
         }
@@ -74,8 +74,8 @@ public class player_move : MonoBehaviour {
     void getInput() {
         if(playerNum == 1 ){
             moveDirection = Input.GetAxis("Horizontal");
-            shouldJump = Input.GetKeyDown("up");
-            shouldSmash = Input.GetKeyDown("down");
+            shouldJump = Input.GetKeyDown("up") | Input.GetKeyDown("o");
+            shouldSmash = Input.GetKeyDown("down") | Input.GetKeyDown("l");
         }
         else if (playerNum == 2){
             moveDirection = Input.GetAxis("Horizontal2");
