@@ -9,6 +9,7 @@ public class cube_spitter_script : MonoBehaviour {
 	int nextActiveCube=0;
 	public Vector2 rightForce, leftForce;
 	public float cubeLifetime = 1f;
+	public float spawnOffset = 50f;
 	// Use this for initialization
 	void Start () {
 		cubes = new GameObject[maxNumCubes];
@@ -21,9 +22,9 @@ public class cube_spitter_script : MonoBehaviour {
 		}
 	}
 	public IEnumerator spawnCubes(){
-			throwCube(rightForce);
+			throwCube(rightForce, spawnOffset);
 			yield return new WaitForSeconds(0.02f);
-			throwCube(leftForce);
+			throwCube(leftForce, -spawnOffset);
 	}
 	IEnumerator deSpawnCube(int cubeIndex, float seconds){
 		yield return new WaitForSeconds(seconds);
@@ -33,7 +34,7 @@ public class cube_spitter_script : MonoBehaviour {
 	void Update () {
 	}
 
-	void throwCube(Vector2 throwForce){
+	void throwCube(Vector2 throwForce, float xOffset){
 		//is it faster to 
 		/*
 		A- hold cube as gameObject, use .transform and .GetComponent
@@ -41,7 +42,7 @@ public class cube_spitter_script : MonoBehaviour {
 		C- use an array of structs rather than gameObjects.
 		 */
 		cubes[nextActiveCube].SetActive(true);
-		cubes[nextActiveCube].transform.position = transform.position;
+		cubes[nextActiveCube].transform.position = new Vector3(transform.position.x + xOffset, transform.position.y, transform.position.z);
 		cubes[nextActiveCube].GetComponent<Rigidbody2D>().AddForce(throwForce);
 		StartCoroutine(deSpawnCube(nextActiveCube, cubeLifetime));
 		incrementActiveCube();
