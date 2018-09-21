@@ -43,20 +43,16 @@ public class game_controller_script : MonoBehaviour {
 			Debug.LogError("Unknown Player Number");
 		}
 		if ((player1Score + player2Score) % 2 == 0){
-			StartCoroutine("loadScene1", 2f);			
+			StartCoroutine(loadScene(0, 2f));			
 		}
 		else {
-			StartCoroutine("loadScene1", 2f);
+			StartCoroutine(loadScene(1, 2f));			
 		}
 		updateScore();
 	}
 
-	IEnumerator loadScene1(float delay){
+	IEnumerator loadScene(int index, float delay){
         yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(0);
-    }
-	IEnumerator loadScene2(float delay){
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(index);
     }
 }
