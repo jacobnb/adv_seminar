@@ -19,6 +19,7 @@ public class player_move : MonoBehaviour {
     public LayerMask playerMask;
     private Transform bottomCollider;
     public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
+    Vector2 touchOrigin = -Vector2.one;
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D>();
@@ -29,7 +30,11 @@ public class player_move : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        getInput();
+#if UNITY_STANDALONE || UNITY_WEBPLAYER
+        getKeyInput();
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        getTouchInput();
+#endif 
         movePlayer();
         checkForDamage();
 	}
@@ -72,7 +77,38 @@ public class player_move : MonoBehaviour {
         }
         StartCoroutine("freeze", 2*frozenTime);
     }
-    void getInput() {
+    void getTouchInput()
+    { //https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/adding-mobile-controls
+        if (Input.touchCount > 0)
+        {
+            Touch myTouch = Input.touches[0];
+            if(myTouch.phase == TouchPhase.Began)
+            {
+                touchOrigin = myTouch.position;
+            }
+            else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
+            {
+                Vector2 touchEnd = myTouch.position;
+                float x = touchEnd.x - touchOrigin.x;
+                float y = touchEnd.y - touchOrigin.y;
+                touchOrigin.x = -1;
+                //only gets horizontal and vertical touches.
+                if (Mathf.Abs(x) > Mathf.Abs(y))
+                {
+                    moveDirection = x > 0 ? 1 : -1;
+                }
+                else
+                {
+                    if (touchEnd.y > touchOrigin.y)
+                        shouldJump = true;
+                    else
+                        shouldSmash = true;
+                }
+                    
+            }
+        }
+    }
+    void getKeyInput() {
         if(playerNum == 1 ){
             moveDirection = Input.GetAxis("Horizontal");
             shouldJump = Input.GetKeyDown("up");
