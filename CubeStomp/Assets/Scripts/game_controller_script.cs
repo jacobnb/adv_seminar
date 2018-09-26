@@ -46,7 +46,7 @@ public class game_controller_script : MonoBehaviour {
 			StartCoroutine(loadScene(2, 2f));			
 		}
 		else {
-			StartCoroutine(loadScene(3, 2f));			
+			StartCoroutine(loadScene(2, 2f));			
 		}
 		updateScore();
 	}
