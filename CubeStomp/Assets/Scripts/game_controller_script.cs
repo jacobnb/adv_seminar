@@ -43,10 +43,10 @@ public class game_controller_script : MonoBehaviour {
 			Debug.LogError("Unknown Player Number");
 		}
 		if ((player1Score + player2Score) % 2 == 0){
-			StartCoroutine(loadScene(0, 2f));			
+			StartCoroutine(loadScene(2, 2f));			
 		}
 		else {
-			StartCoroutine(loadScene(1, 2f));			
+			StartCoroutine(loadScene(3, 2f));			
 		}
 		updateScore();
 	}
