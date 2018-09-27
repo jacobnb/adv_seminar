@@ -7,3 +7,5 @@ class project
 3. Change build to android and do the other stuff it says.
 	a. Edit > Preferences > External tools to set android build location. (just select the folder with all the stuff)
 4. Build and hope it works.
+
+You might also have to set the JAVA_HOME system variable after installing java.
