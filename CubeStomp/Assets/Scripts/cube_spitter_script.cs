@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class cube_spitter_script : MonoBehaviour {
 	GameObject[] cubes;
-	public GameObject cube;
+
+    [SerializeField]
+    private GameObject cube;
 	public int maxNumCubes = 50;
-	int nextActiveCube=0;
+	int nextActiveCube = 0;
 	public Vector2 rightForce, leftForce;
 	public float cubeLifetime = 1f;
 	public float spawnOffset = 50f;
@@ -15,23 +17,23 @@ public class cube_spitter_script : MonoBehaviour {
 		cubes = new GameObject[maxNumCubes];
 		initCubes();
 	}
+
 	void initCubes(){
 		for (int i =0; i<cubes.Length; i++){
-			cubes[i] = Instantiate(cube) as GameObject;
+            cubes[i] = Instantiate(cube);
 			cubes[i].SetActive(false);
 		}
 	}
+
 	public IEnumerator spawnCubes(){
 			throwCube(rightForce, spawnOffset);
-			yield return new WaitForSeconds(0.02f);
+			yield return new WaitForSeconds(0.02f); //leftover from when they had colliders.
 			throwCube(leftForce, -spawnOffset);
 	}
+
 	IEnumerator deSpawnCube(int cubeIndex, float seconds){
 		yield return new WaitForSeconds(seconds);
 		cubes[cubeIndex].SetActive(false);
-	}
-	// Update is called once per frame
-	void Update () {
 	}
 
 	void throwCube(Vector2 throwForce, float xOffset){
@@ -43,15 +45,15 @@ public class cube_spitter_script : MonoBehaviour {
 		 */
 		cubes[nextActiveCube].SetActive(true);
 		cubes[nextActiveCube].transform.position = new Vector3(transform.position.x + xOffset, transform.position.y, transform.position.z);
-		cubes[nextActiveCube].GetComponent<Rigidbody2D>().AddForce(throwForce);
+        cubes[nextActiveCube].GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        cubes[nextActiveCube].GetComponent<Rigidbody2D>().AddForce(throwForce);
 		StartCoroutine(deSpawnCube(nextActiveCube, cubeLifetime));
 		incrementActiveCube();
 	}
 
 	void incrementActiveCube(){
 		nextActiveCube++;
-		if (nextActiveCube >= cubes.Length){
-			nextActiveCube = 0;
-		}
+        nextActiveCube = nextActiveCube % cubes.Length;
+
 	}
 }
