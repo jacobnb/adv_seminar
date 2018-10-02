@@ -5,6 +5,7 @@ using UnityEngine;
 public class player_move : MonoBehaviour
 {
     public player_move enemy_moveScript;
+    public touch_joystick_script joystick_script;
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
@@ -52,7 +53,7 @@ public class player_move : MonoBehaviour
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-        getTouchInput();
+        getTouchJoystickInput();
 #endif 
         movePlayer();
         checkForDamage();
@@ -93,6 +94,13 @@ public class player_move : MonoBehaviour
             StartCoroutine(hitPlayer.transform.GetComponent<player_move>().freeze(frozenTime));
         }
         StartCoroutine("freeze", 2 * frozenTime);
+    }
+    void getTouchJoystickInput()
+    {
+        Vector2 joystickLocation = joystick_script.getJoystickLoc();
+        moveDirection = joystickLocation.x;
+        shouldJump = joystickLocation.y > 0.5;
+        shouldSmash = joystickLocation.y < -0.5;
     }
     void getTouchInput()
     { //https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/adding-mobile-controls
