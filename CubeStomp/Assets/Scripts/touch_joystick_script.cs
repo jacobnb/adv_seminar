@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class touch_joystick_script : MonoBehaviour {
+public class touch_joystick_script : MonoBehaviour
+{
     [SerializeField]
     float touchRadius;
+    [SerializeField]
+    float joystickRadius;
     Vector3 touchPosition;
     Vector3 startPosit;
     bool validTouch = false;
@@ -14,8 +17,9 @@ public class touch_joystick_script : MonoBehaviour {
     int pointsInCircle;
     int touchIndex = -1;
     Touch testTouch;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         line = gameObject.GetComponent<LineRenderer>();
         Debug.Assert(line);
         startPosit = transform.position;
@@ -37,8 +41,8 @@ public class touch_joystick_script : MonoBehaviour {
         float thetaIncrement = 2 * Mathf.PI / pointsInCircle;
         for (int i = 0; i < (pointsInCircle); i++)
         {
-            x = Mathf.Cos(theta)*touchRadius + startPosit.x;
-            y = Mathf.Sin(theta)*touchRadius + startPosit.y;
+            x = Mathf.Cos(theta) * touchRadius + startPosit.x;
+            y = Mathf.Sin(theta) * touchRadius + startPosit.y;
 
             line.SetPosition(i, new Vector3(x, y, z));
 
@@ -49,7 +53,8 @@ public class touch_joystick_script : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         getTouchInput();
         moveJoystick();
     }
@@ -59,21 +64,38 @@ public class touch_joystick_script : MonoBehaviour {
     }
     void moveJoystick()
     {
-            if((touchPosition - startPosit).magnitude > touchRadius)
-            {
-            transform.position = (touchPosition - startPosit).normalized * touchRadius + startPosit;
-            }
-            else
-            {
-                transform.position = touchPosition;
-            }
+        if ((touchPosition - startPosit).magnitude < joystickRadius)
+        {
+            transform.position = touchPosition;
+        }
+        else
+        {
+            transform.position = (touchPosition - startPosit).normalized * joystickRadius + startPosit;
+        }
     }
     Vector3 getWorldPosition(Vector2 touchPosit)
     {
         return Camera.main.ScreenToWorldPoint(new Vector3(touchPosit.x, touchPosit.y, cameraOffset));
     }
 
-    void getTouchInput(){
+    void getTouchInput()
+    {
+        if (Input.touchCount > 0)
+        { //get a touch inside the joystick area.
+            foreach (Touch myTouch in Input.touches)
+            {
+                touchPosition = getWorldPosition(myTouch.position);
+                if ((touchPosition - startPosit).magnitude < touchRadius)
+                {//if touch is close enough, return.
+                    return;
+                }
+            }
+        }
+        //if no valid touches have been found, reset.
+        touchPosition = startPosit;
+    }
+    void oldGetTouchInput()
+    {
 
         if (validTouch)
         {
@@ -84,7 +106,7 @@ public class touch_joystick_script : MonoBehaviour {
             if (touchIndex < Input.touchCount)
             {
                 touchPosition = getWorldPosition(Input.GetTouch(touchIndex).position);
-                
+
             }
             else
             {
@@ -92,14 +114,15 @@ public class touch_joystick_script : MonoBehaviour {
                 touchPosition = startPosit;
             }
         }
-        else if (Input.touchCount > 0) { 
+        else if (Input.touchCount > 0)
+        {
             //Find a touch starting inside the joystick area.
             int index = 0;
             foreach (Touch myTouch in Input.touches)
             {
                 if (myTouch.phase == TouchPhase.Began)
-                { 
-                    if((getWorldPosition(myTouch.position) - startPosit).magnitude < touchRadius)
+                {
+                    if ((getWorldPosition(myTouch.position) - startPosit).magnitude < touchRadius)
                     {//if touch is close enough.
                         validTouch = true;
                         touchIndex = myTouch.fingerId;
@@ -107,13 +130,13 @@ public class touch_joystick_script : MonoBehaviour {
                         return;
                     }
 
-                    
+
                 }
                 index++;
             }
-			
-        }
-	}
 
-    
+        }
+    }
+
+
 }
