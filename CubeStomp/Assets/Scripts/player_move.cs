@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,10 @@ public class player_move : MonoBehaviour
 {
     public player_move enemy_moveScript;
     public touch_joystick_script joystick_script;
+    [SerializeField]
+    Touchable.touch_object upButton_script;
+    [SerializeField]
+    Touchable.touch_object downButton_script;
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
@@ -99,10 +103,10 @@ public class player_move : MonoBehaviour
     {
         Vector2 joystickLocation = joystick_script.getJoystickLoc();
         moveDirection = joystickLocation.x;
-        shouldJump = joystickLocation.y > 0.5;
-        shouldSmash = joystickLocation.y < -0.5;
+        shouldJump = ((touch_button_script)upButton_script).isClicked(); //Is there a better way to do this?
+        shouldSmash = ((touch_button_script)downButton_script).isClicked(); ;
     }
-    void getTouchInput()
+    void getTouchInput() //old
     { //https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/adding-mobile-controls
         if (Input.touchCount > 0)
         {
@@ -215,21 +219,21 @@ public class player_move : MonoBehaviour
     {
         rb.AddForce(new Vector2(0f, -jumpHeight));
     }
-    void checkForGround()
-    {
-        Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
-        RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-        //Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
-        //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-        if (hitGround.collider)
-        {
-            //canJump = true;
-            //doubleJump = true;
-        }
-    }
-    void OnColliderEnter(Collider col)
-    {
-        Debug.Log("NOT Bottom Collider 2");
-    }
+    //void checkForGround()
+    //{
+    //    Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
+    //    RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
+    //    //Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
+    //    //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
+    //    if (hitGround.collider)
+    //    {
+    //        //canJump = true;
+    //        //doubleJump = true;
+    //    }
+    //}
+    //void OnColliderEnter(Collider col)
+    //{
+    //    Debug.Log("NOT Bottom Collider 2");
+    //}
 
 }

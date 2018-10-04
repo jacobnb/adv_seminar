@@ -8,12 +8,49 @@ namespace Touchable
     {
         [SerializeField]
         protected float radius;
+        [SerializeField]
+        bool shouldDrawCircle;
+
         protected Touch myTouch;
         protected Vector2 startPosit;
 
         protected void Start()
         {
             startPosit = transform.position;
+            if (shouldDrawCircle)
+            {
+                drawRadius();
+            }
+        }
+
+        private void drawRadius()
+        {
+            int pointsInCircle = 30;
+            gameObject.AddComponent<LineRenderer>();
+            LineRenderer line = gameObject.GetComponent<LineRenderer>();
+            if (!line)
+            {
+                return;
+            }
+            line.startWidth = 0.1f;
+            line.endWidth = 0.1f;
+            line.positionCount = pointsInCircle;
+            line.useWorldSpace = true;
+            line.loop = true;
+            float x;
+            float y;
+            float z = 0;
+            float theta = 0;
+            float thetaIncrement = 2 * Mathf.PI / pointsInCircle;
+            for (int i = 0; i < (pointsInCircle); i++)
+            {
+                x = Mathf.Cos(theta) * radius + startPosit.x;
+                y = Mathf.Sin(theta) * radius + startPosit.y;
+
+                line.SetPosition(i, new Vector3(x, y, z));
+
+                theta += thetaIncrement;
+            }
         }
 
         public virtual void checkForTouching(Touch[] newTouches)
