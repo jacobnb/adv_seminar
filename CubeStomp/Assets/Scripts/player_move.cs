@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class player_move : MonoBehaviour
 {
+    [SerializeField]
+    bool enableAI = false;
     public player_move enemy_moveScript;
     public touch_joystick_script joystick_script;
     [SerializeField]
@@ -54,13 +56,24 @@ public class player_move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         getTouchJoystickInput();
 #endif 
+        if (enableAI)
+        {
+            AIMovement();
+        }
         movePlayer();
         checkForDamage();
+    }
+    void AIMovement()
+    {
+        moveDirection = Random.Range(-1f, 1f);
+        shouldJump = Random.value < 0.1f;
+        //shouldSmash = Random.value < 0.5f;
     }
     public IEnumerator freeze(float frozenTime)
     {
@@ -104,7 +117,7 @@ public class player_move : MonoBehaviour
         Vector2 joystickLocation = joystick_script.getJoystickLoc();
         moveDirection = joystickLocation.x;
         shouldJump = ((touch_button_script)upButton_script).isClicked(); //Is there a better way to do this?
-        shouldSmash = ((touch_button_script)downButton_script).isClicked(); ;
+        shouldSmash = ((touch_button_script)downButton_script).isClicked();
     }
 
     void getKeyInput()

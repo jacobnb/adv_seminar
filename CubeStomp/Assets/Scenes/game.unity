@@ -1226,7 +1226,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 564169202}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.63, y: -3.05, z: 0}
+  m_LocalPosition: {x: -11.82, y: -3.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1722360556}
@@ -1492,7 +1492,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1248493525}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -1.63, y: -6.01, z: 0}
+  m_LocalPosition: {x: -11.82, y: -5.46, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1722360556}
@@ -1642,7 +1642,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1248762715}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.36, y: -3.05, z: 0}
+  m_LocalPosition: {x: -14.07, y: -3.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1722360556}
@@ -1860,6 +1860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAI: 1
   enemy_moveScript: {fileID: 1928814959}
   joystick_script: {fileID: 1731859334}
   upButton_script: {fileID: 1248762716}
@@ -2009,7 +2010,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1619430308}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -8.36, y: -6.01, z: 0}
+  m_LocalPosition: {x: -14.07, y: -6.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1722360556}
@@ -2565,7 +2566,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1731859332}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.42, y: -4.46, z: 0}
+  m_LocalPosition: {x: -14.07, y: -4.46, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1722360556}
@@ -2725,6 +2726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdd65f4427af9d4eaf7a3408839ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableAI: 0
   enemy_moveScript: {fileID: 1337790765}
   joystick_script: {fileID: 436433929}
   upButton_script: {fileID: 564169203}
