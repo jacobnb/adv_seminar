@@ -4,20 +4,37 @@ using UnityEngine;
 
 namespace Touchable
 {
-    public class touch_object : MonoBehaviour
+    public abstract class touch_object : MonoBehaviour
     {
         [SerializeField]
         float radius;
         Touch myTouch;
-        
-        public float getRadius()
+        Vector2 startPosit;
+
+        protected void Start()
         {
-            return radius;
+            Debug.Log("Parent Start");
+            startPosit = transform.position;
         }
-        public void setTouch(Touch newTouch)
-        {
-            myTouch = newTouch;
+
+        public virtual void checkForTouching(Touch[] newTouches)
+        { //can be overriden with override
+            //Will only get the first touch in it's radius.
+            foreach(Touch tempTouch in newTouches)
+            {
+                if ((tempTouch.position - startPosit).magnitude < radius)
+                {
+                    myTouch = tempTouch;
+                    hasBeenTouched();
+                    return;
+                }
+            }
+
+            //check if a touch is touching.
         }
+
+        //do something when touched.
+        protected abstract void hasBeenTouched();
     }
 }
 

@@ -912,6 +912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6af9b3fd0f8f64684a0c3da2f1e939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 0
   touchRadius: 2
   joystickRadius: 1
   pointsInCircle: 40
@@ -1316,11 +1317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   touchableObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 436433929}
 --- !u!4 &931820655
 Transform:
   m_ObjectHideFlags: 0
@@ -2110,6 +2107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6af9b3fd0f8f64684a0c3da2f1e939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 0
   touchRadius: 2
   joystickRadius: 1
   pointsInCircle: 40

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Touchable;
 
-public class touch_joystick_script : MonoBehaviour
+public class touch_joystick_script : touch_object
 {
     [SerializeField]
     float touchRadius;
@@ -17,9 +18,11 @@ public class touch_joystick_script : MonoBehaviour
     int pointsInCircle;
     int touchIndex = -1;
     Touch testTouch;
-    // Use this for initialization
-    void Start()
+
+    private void Start()
     {
+        Debug.Log("Child Start");
+        base.Start();
         line = gameObject.GetComponent<LineRenderer>();
         Debug.Assert(line);
         startPosit = transform.position;
@@ -29,6 +32,11 @@ public class touch_joystick_script : MonoBehaviour
         validTouch = false;
     }
 
+    protected override void hasBeenTouched()
+    {
+        Debug.Log("Joystick has been touched");
+
+    }
     void initLine()
     {
         line.positionCount = pointsInCircle;
@@ -52,7 +60,6 @@ public class touch_joystick_script : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         getTouchInput();

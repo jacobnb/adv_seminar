@@ -5,26 +5,37 @@ using Touchable;
 public class touch_controller_script : MonoBehaviour {
     [SerializeField]
     touch_object[] touchableObjects;
-    float[] object_radii; 
-    //not sure if it makes sense to cache the radii like this or not.
+    float cameraOffset;
+    Touch[] touches;
 
+    void Start () {
+        cameraOffset = -Camera.main.transform.position.z;
 
-	void Start () {
-        cacheRadii();
     }
-	
-    
-	void Update () {
-	    //Iterate through touches	
+
+
+    void Update () {
+
+        getTouches();
+        foreach(touch_object touchObject in touchableObjects)
+        {
+            touchObject.checkForTouching(touches);
+        }
 	}
 
-    void cacheRadii()
+    void getTouches()
     {
-        int index = 0;
-        foreach (touch_object touchObject in touchableObjects)
+        touches = Input.touches;
+        for(int x = 0; x < touches.Length; x++)
         {
-            object_radii[index] = touchObject.getRadius();
-            index++;
+            touches[x].position = getWorldPosition(touches[x].position);
         }
+        return;
     }
+
+    Vector3 getWorldPosition(Vector2 touchPosit)
+    {
+        return Camera.main.ScreenToWorldPoint(new Vector3(touchPosit.x, touchPosit.y, cameraOffset));
+    }
+
 }
