@@ -7,13 +7,12 @@ namespace Touchable
     public abstract class touch_object : MonoBehaviour
     {
         [SerializeField]
-        float radius;
-        Touch myTouch;
-        Vector2 startPosit;
+        protected float radius;
+        protected Touch myTouch;
+        protected Vector2 startPosit;
 
         protected void Start()
         {
-            Debug.Log("Parent Start");
             startPosit = transform.position;
         }
 
@@ -29,12 +28,12 @@ namespace Touchable
                     return;
                 }
             }
-
-            //check if a touch is touching.
+            hasNotBeenTouched();
         }
 
-        //do something when touched.
+        //do something when touched / not touched.
         protected abstract void hasBeenTouched();
+        protected abstract void hasNotBeenTouched();
     }
 }
 
