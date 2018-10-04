@@ -1,11 +1,17 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class player_move : MonoBehaviour
 {
+    [SerializeField]
+    bool enableAI = false;
     public player_move enemy_moveScript;
     public touch_joystick_script joystick_script;
+    [SerializeField]
+    Touchable.touch_object upButton_script;
+    [SerializeField]
+    Touchable.touch_object downButton_script;
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
@@ -50,13 +56,24 @@ public class player_move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         getTouchJoystickInput();
 #endif 
+        if (enableAI)
+        {
+            AIMovement();
+        }
         movePlayer();
         checkForDamage();
+    }
+    void AIMovement()
+    {
+        moveDirection = Random.Range(-1f, 1f);
+        shouldJump = Random.value < 0.1f;
+        //shouldSmash = Random.value < 0.5f;
     }
     public IEnumerator freeze(float frozenTime)
     {
@@ -99,40 +116,10 @@ public class player_move : MonoBehaviour
     {
         Vector2 joystickLocation = joystick_script.getJoystickLoc();
         moveDirection = joystickLocation.x;
-        shouldJump = joystickLocation.y > 0.5;
-        shouldSmash = joystickLocation.y < -0.5;
+        shouldJump = ((touch_button_script)upButton_script).isClicked(); //Is there a better way to do this?
+        shouldSmash = ((touch_button_script)downButton_script).isClicked();
     }
-    void getTouchInput()
-    { //https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/adding-mobile-controls
-        if (Input.touchCount > 0)
-        {
-            Touch myTouch = Input.touches[0];
-            if (myTouch.phase == TouchPhase.Began)
-            {
-                touchOrigin = myTouch.position;
-            }
-            else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
-            {
-                Vector2 touchEnd = myTouch.position;
-                float x = touchEnd.x - touchOrigin.x;
-                float y = touchEnd.y - touchOrigin.y;
-                touchOrigin.x = -1;
-                //only gets horizontal and vertical touches.
-                if (Mathf.Abs(x) > Mathf.Abs(y))
-                {
-                    moveDirection = x > 0 ? 1 : -1;
-                }
-                else
-                {
-                    if (touchEnd.y > touchOrigin.y)
-                        shouldJump = true;
-                    else
-                        shouldSmash = true;
-                }
 
-            }
-        }
-    }
     void getKeyInput()
     {
         if (playerNum == 1)
@@ -215,21 +202,4 @@ public class player_move : MonoBehaviour
     {
         rb.AddForce(new Vector2(0f, -jumpHeight));
     }
-    void checkForGround()
-    {
-        Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
-        RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-        //Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
-        //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-        if (hitGround.collider)
-        {
-            //canJump = true;
-            //doubleJump = true;
-        }
-    }
-    void OnColliderEnter(Collider col)
-    {
-        Debug.Log("NOT Bottom Collider 2");
-    }
-
 }
