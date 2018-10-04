@@ -106,37 +106,7 @@ public class player_move : MonoBehaviour
         shouldJump = ((touch_button_script)upButton_script).isClicked(); //Is there a better way to do this?
         shouldSmash = ((touch_button_script)downButton_script).isClicked(); ;
     }
-    void getTouchInput() //old
-    { //https://unity3d.com/learn/tutorials/projects/2d-roguelike-tutorial/adding-mobile-controls
-        if (Input.touchCount > 0)
-        {
-            Touch myTouch = Input.touches[0];
-            if (myTouch.phase == TouchPhase.Began)
-            {
-                touchOrigin = myTouch.position;
-            }
-            else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
-            {
-                Vector2 touchEnd = myTouch.position;
-                float x = touchEnd.x - touchOrigin.x;
-                float y = touchEnd.y - touchOrigin.y;
-                touchOrigin.x = -1;
-                //only gets horizontal and vertical touches.
-                if (Mathf.Abs(x) > Mathf.Abs(y))
-                {
-                    moveDirection = x > 0 ? 1 : -1;
-                }
-                else
-                {
-                    if (touchEnd.y > touchOrigin.y)
-                        shouldJump = true;
-                    else
-                        shouldSmash = true;
-                }
 
-            }
-        }
-    }
     void getKeyInput()
     {
         if (playerNum == 1)
@@ -219,21 +189,4 @@ public class player_move : MonoBehaviour
     {
         rb.AddForce(new Vector2(0f, -jumpHeight));
     }
-    //void checkForGround()
-    //{
-    //    Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
-    //    RaycastHit2D hitGround = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-    //    //Debug.DrawRay(bottomCollider.position, Vector3.down*groundDistance);
-    //    //RaycastHit2D hitGround = Physics2D.Raycast(bottomCollider.position, Vector2.down, groundDistance, groundMask); //set up raycast mask in start.
-    //    if (hitGround.collider)
-    //    {
-    //        //canJump = true;
-    //        //doubleJump = true;
-    //    }
-    //}
-    //void OnColliderEnter(Collider col)
-    //{
-    //    Debug.Log("NOT Bottom Collider 2");
-    //}
-
 }
