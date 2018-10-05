@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class game_controller_script : MonoBehaviour {
 	public static game_controller_script GAME_CONTROLLER;
 	public int player1Score, player2Score;
+    int currentScene;
+    int nextSceneToLoad;
 	Text player1Text, player2Text;
 	void Awake(){
 		if(!GAME_CONTROLLER){
@@ -51,8 +53,21 @@ public class game_controller_script : MonoBehaviour {
 		updateScore();
 	}
 
-	IEnumerator loadScene(int index, float delay){
+	IEnumerator loadScene(int index, float delay = 0f){
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(index);
+    }
+
+    //un-load old scene
+    //load new scene.
+
+    public void startGame()
+    {
+        SceneManager.LoadScene(nextSceneToLoad, LoadSceneMode.Additive); // (nextSceneToLoad);
+        SceneManager.UnloadSceneAsync(currentScene); //wait for this to finish and add a loading screen;
+
+        currentScene = nextSceneToLoad;
+
+
     }
 }

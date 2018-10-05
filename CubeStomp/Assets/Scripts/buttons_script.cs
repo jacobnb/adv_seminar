@@ -16,7 +16,7 @@ public class buttons_script : MonoBehaviour {
 	}
     public void startGame()
     {
-        SceneManager.LoadScene("game");
+       // game_controller_script.GAME_CONTROLLER.
     }
     public void menu()
     {
