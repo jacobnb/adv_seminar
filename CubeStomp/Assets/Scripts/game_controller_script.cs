@@ -80,11 +80,11 @@ public class game_controller_script : MonoBehaviour {
 			Debug.LogError("Unknown Player Number");
 		}
 		if ((player1Score + player2Score) % 2 == 0){
-			StartCoroutine(loadNextScene());			
+            nextScene();
 		}
 		else {
-			StartCoroutine(loadNextScene());			
-		}
+            nextScene();
+        }
 		updateScore();
 	}
 
@@ -106,6 +106,16 @@ public class game_controller_script : MonoBehaviour {
     {
         player1.GameStarted();
         player2.GameStarted();
+    }
+    void nextScene()
+    {
+        nextSceneToLoad++;
+        nextSceneToLoad -= (int) Scenes.LEVEL_ONE;
+        nextSceneToLoad = nextSceneToLoad % (SceneManager.sceneCountInBuildSettings - (int) Scenes.LEVEL_ONE);
+        nextSceneToLoad += (int)Scenes.LEVEL_ONE;
+
+        Debug.Log(nextSceneToLoad);
+        StartCoroutine(loadNextScene());
     }
 
     //un-load old scene
