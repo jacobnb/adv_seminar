@@ -30,6 +30,9 @@ public class player_move : MonoBehaviour
     private Transform bottomCollider;
     public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
     Vector2 touchOrigin = -Vector2.one;
+    Vector2 startPosit;
+    Vector3 startSize;
+    Vector3 bottomColliderStartSize;
 
     // Use this for initialization
     void Start()
@@ -39,6 +42,8 @@ public class player_move : MonoBehaviour
         gcs = game_controller_script.GAME_CONTROLLER;
         Debug.Assert(gcs);
         cubeSpitter = gameObject.GetComponentInChildren<cube_spitter_script>();
+        startPosit = transform.position;
+        startSize = transform.localScale;
         // Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
@@ -51,8 +56,31 @@ public class player_move : MonoBehaviour
         {
             playerNum = 2;
         }
+
+        //used to reset the bottom collider size.
+        //this is expensive, but it's in start, and the math is a pain.
+        bottomCollider.parent = null;
+        bottomColliderStartSize = bottomCollider.localScale;
+        bottomCollider.parent = transform;
     }
 
+    public void GameStarted()
+    {
+        resetPlayer();
+    }
+    void resetPlayer()
+    {
+        rb.velocity = Vector2.zero;
+        transform.position = startPosit;
+        transform.localScale = startSize;
+        gameObject.SetActive(true);
+        touching_enemyBottom = false;
+
+        //reset the bottom collider size. this is expensive.
+        bottomCollider.parent = null;
+        bottomCollider.localScale = bottomColliderStartSize;
+        bottomCollider.parent = transform;
+    }
     // Update is called once per frame
     void Update()
     {
