@@ -152,8 +152,17 @@ public class game_controller_script : MonoBehaviour {
 
     public void startGame()
     {
+
+        nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         showUI(true);
         StartCoroutine(loadNextScene());
+
+        //reset
+        player1Score = 0;
+        player2Score = 0;
+        updateScore();
+        showUI(true);
+        showWinScreen(false);
     }
 
 }
