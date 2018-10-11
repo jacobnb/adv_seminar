@@ -52,6 +52,8 @@ public class game_controller_script : MonoBehaviour {
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         currentScene = (int)Scenes.START;
+        SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
+
 
         //replace with messaging system
         player1 = GameObject.Find("Player1").GetComponent<player_move>();
