@@ -4,16 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class buttons_script : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
     public void startGame()
     {
         game_controller_script.GAME_CONTROLLER.startGame();
@@ -22,4 +12,6 @@ public class buttons_script : MonoBehaviour {
     {
         SceneManager.LoadScene("menu");
     }
+
+
 }

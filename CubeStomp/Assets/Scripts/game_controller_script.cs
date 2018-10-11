@@ -85,6 +85,11 @@ public class game_controller_script : MonoBehaviour {
         }
     }
 
+    public void setHealth(float newHealth)
+    {
+        Debug.Log(newHealth);
+    }
+
     void playerWon(int playerNum)
     {
         showWinScreen(true, playerNum.ToString());
