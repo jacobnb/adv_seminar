@@ -87,7 +87,8 @@ public class game_controller_script : MonoBehaviour {
 
     public void setHealth(float newHealth)
     {
-        Debug.Log(newHealth);
+        player1.setHealth(newHealth);
+        player2.setHealth(newHealth);
     }
 
     void playerWon(int playerNum)
@@ -152,8 +153,11 @@ public class game_controller_script : MonoBehaviour {
         StartCoroutine(loadNextScene());
     }
 
-    //un-load old scene
-    //load new scene.
+    public void loadMenu()
+    {
+        nextSceneToLoad = (int)Scenes.MENU;
+        StartCoroutine(loadNextScene());
+    }
 
     public void startGame()
     {

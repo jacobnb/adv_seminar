@@ -10,7 +10,7 @@ public class buttons_script : MonoBehaviour {
     }
     public void menu()
     {
-        SceneManager.LoadScene("menu");
+        game_controller_script.GAME_CONTROLLER.loadMenu();
     }
 
 

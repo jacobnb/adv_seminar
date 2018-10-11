@@ -21,6 +21,7 @@ public class player_move : MonoBehaviour
     public bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
     //^public to be accessed by the bottom_collider_script
     bool isFrozen;
+    float maxHealth = 50;
     private game_controller_script gcs;
     private cube_spitter_script cubeSpitter;
     public float groundDistance = 3.02f;
@@ -29,7 +30,6 @@ public class player_move : MonoBehaviour
     public LayerMask playerMask;
     private Transform bottomCollider;
     public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
-    Vector2 touchOrigin = -Vector2.one;
     Vector2 startPosit;
     Vector3 startSize;
     Vector3 bottomColliderStartSize;
@@ -67,6 +67,10 @@ public class player_move : MonoBehaviour
     public void GameStarted()
     {
         resetPlayer();
+    }
+    public void setHealth(float newHP)
+    {
+        maxHealth = newHP;
     }
     void resetPlayer()
     {
@@ -115,7 +119,7 @@ public class player_move : MonoBehaviour
         if (!touching_enemySide && canJump && touching_enemyBottom)
         {
             StartCoroutine(cubeSpitter.spawnCubes());
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.01f, transform.localScale.z);
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
             bottomCollider.localScale = new Vector3(bottomCollider.localScale.x, bottomCollider.localScale.y + 0.05f, bottomCollider.localScale.z);
             //this is a hack to keep the bottom collider the right size.
 

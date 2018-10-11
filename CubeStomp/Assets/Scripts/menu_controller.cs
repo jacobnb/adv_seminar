@@ -16,6 +16,10 @@ public class menu_controller : MonoBehaviour {
         sliderValue.SetText(slider.value.ToString("0"));
 
     }
+    public void startGame()
+    {
+        game_controller_script.GAME_CONTROLLER.startGame();
+    }
     public void adjustHealth(float newHealth)
     {
         game_controller_script.GAME_CONTROLLER.setHealth(newHealth);
