@@ -22,7 +22,10 @@ namespace Touchable
                 drawRadius();
             }
         }
-
+        public void deActivate()
+        {
+            gameObject.SetActive(false);
+        }
         private void drawRadius()
         {
             int pointsInCircle = 30;

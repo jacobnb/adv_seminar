@@ -77,7 +77,7 @@ public class game_controller_script : MonoBehaviour {
         if (shouldShow)
         {
             winScreen.SetActive(true);
-            winScreen.GetComponentInChildren<TextMeshProUGUI>().SetText("Player " + playerNumber + "Wins!");
+            winScreen.GetComponentInChildren<TextMeshProUGUI>().SetText("Player " + playerNumber + " Wins!");
         }
         else
         {

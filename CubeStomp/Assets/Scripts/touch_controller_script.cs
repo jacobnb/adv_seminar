@@ -11,6 +11,15 @@ public class touch_controller_script : MonoBehaviour {
     void Start () {
         cameraOffset = -Camera.main.transform.position.z;
 
+#if UNITY_STANDALONE || UNITY_WEBPLAYER
+        //disable all
+        foreach(touch_object touchObject in touchableObjects)
+        {
+            touchObject.deActivate();
+        }
+        gameObject.SetActive(false);
+#endif 
+
     }
 
 
