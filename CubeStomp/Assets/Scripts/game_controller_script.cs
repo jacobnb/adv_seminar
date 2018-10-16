@@ -14,39 +14,39 @@ enum Scenes
 }
 
 public class game_controller_script : MonoBehaviour {
-	public static game_controller_script GAME_CONTROLLER;
-	public int player1Score, player2Score;
+    public static game_controller_script GAME_CONTROLLER;
+    public int player1Score, player2Score;
     public int scoreToWin = 3; //public to be accessed in menu
     int currentScene;
     int nextSceneToLoad;
-	Text player1Text, player2Text;
+    Text player1Text, player2Text;
     Canvas uiCanvas;
     GameObject loadingScreen;
     GameObject winScreen;
     player_move player1, player2; //replace with messaging system?
 
-	void Awake(){
-		if(!GAME_CONTROLLER){
-			player1Score=0;
-			player2Score=0;
-			GAME_CONTROLLER = this;
-			DontDestroyOnLoad(gameObject);
+    void Awake() {
+        if (!GAME_CONTROLLER) {
+            player1Score = 0;
+            player2Score = 0;
+            GAME_CONTROLLER = this;
+            DontDestroyOnLoad(gameObject);
 
-		}
-		else if (GAME_CONTROLLER != this){
-			Destroy(gameObject);
-			GAME_CONTROLLER.Start();
-		}
-	}
-	// Use this for initialization
-	void Start () {
-		player1Text = GameObject.Find("Score 1").GetComponent<Text>();
-		player2Text = GameObject.Find("Score 2").GetComponent<Text>();
+        }
+        else if (GAME_CONTROLLER != this) {
+            Destroy(gameObject);
+            GAME_CONTROLLER.Start();
+        }
+    }
+    // Use this for initialization
+    void Start() {
+        player1Text = GameObject.Find("Score 1").GetComponent<Text>();
+        player2Text = GameObject.Find("Score 2").GetComponent<Text>();
         uiCanvas = GameObject.Find("UI").GetComponent<Canvas>();
         loadingScreen = GameObject.Find("Loading Screen");
         winScreen = GameObject.Find("Win Screen");
-		Debug.Assert(player1Text && player2Text);
-		updateScore();
+        Debug.Assert(player1Text && player2Text);
+        updateScore();
         showUI(false);
         showLoadingScreen(false);
         showWinScreen(false);
@@ -59,10 +59,10 @@ public class game_controller_script : MonoBehaviour {
         player1 = GameObject.Find("Player1").GetComponent<player_move>();
         player2 = GameObject.Find("Player2").GetComponent<player_move>();
     }
-    void updateScore(){
-		player1Text.text = player1Score.ToString();
-		player2Text.text = player2Score.ToString();
-	}
+    void updateScore() {
+        player1Text.text = player1Score.ToString();
+        player2Text.text = player2Score.ToString();
+    }
 
     void showUI(bool shouldShow)
     {
@@ -70,7 +70,7 @@ public class game_controller_script : MonoBehaviour {
     }
     void showLoadingScreen(bool shouldShow)
     {
-        if(loadingScreen)
+        if (loadingScreen)
             loadingScreen.SetActive(shouldShow);
     }
 
@@ -97,19 +97,19 @@ public class game_controller_script : MonoBehaviour {
     {
         showWinScreen(true, playerNum.ToString());
     }
-	public void playerLost(int playerNum){
-		if(playerNum == 2){
-			player1Score++;
-		}
-		else if(playerNum ==1){
-			player2Score++;
-		}
-		else{
-			Debug.LogError("Unknown Player Number");
-		}
-		if(player1Score >= scoreToWin)
+    public void playerLost(int playerNum) {
+        if (playerNum == 2) {
+            player1Score++;
+        }
+        else if (playerNum == 1) {
+            player2Score++;
+        }
+        else {
+            Debug.LogError("Unknown Player Number");
+        }
+        if (player1Score >= scoreToWin)
         {
-            playerWon(1);   
+            playerWon(1);
         }
         else if (player2Score >= scoreToWin)
         {
@@ -123,7 +123,7 @@ public class game_controller_script : MonoBehaviour {
     }
 
 
-	IEnumerator loadNextScene(float delay = 0f){
+    IEnumerator loadNextScene(float delay = 0f) {
         if (currentScene != nextSceneToLoad)
         {
             yield return new WaitForSeconds(delay);
@@ -133,14 +133,31 @@ public class game_controller_script : MonoBehaviour {
             yield return unload; //wait for scene to be unloaded. 
                                  //https://stackoverflow.com/questions/50502394/how-can-i-wait-for-a-scene-to-unload
             SceneManager.LoadScene(nextSceneToLoad, LoadSceneMode.Additive);
-            showLoadingScreen(false);
+            if (currentScene == (int)Scenes.START || currentScene == (int)Scenes.MENU)
+            {
+                levelLoaded();
+            }
             currentScene = nextSceneToLoad;
         }
-        levelLoaded();
+        else// if (currentScene != (int)Scenes.START || currentScene != (int)Scenes.MENU)
+        {
+            showLoadingScreen(true);
+        }
+    }
+
+    public void continueGame(){ //Continue from loading screen
+        //set == in loadNextScene.
+        if(currentScene == nextSceneToLoad)
+        {
+            player1.GameStarted();
+            player2.GameStarted();
+            showLoadingScreen(false);
+        }
     }
 
     void levelLoaded()
     {
+        showLoadingScreen(false);
         player1.GameStarted();
         player2.GameStarted();
     }
