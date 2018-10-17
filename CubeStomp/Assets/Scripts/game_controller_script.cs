@@ -19,7 +19,7 @@ public class game_controller_script : MonoBehaviour {
     public int scoreToWin = 3; //public to be accessed in menu
     int currentScene;
     int nextSceneToLoad;
-    Text player1Text, player2Text;
+    TextMeshProUGUI player1Text, player2Text;
     Canvas uiCanvas;
     GameObject loadingScreen;
     GameObject winScreen;
@@ -40,8 +40,8 @@ public class game_controller_script : MonoBehaviour {
     }
     // Use this for initialization
     void Start() {
-        player1Text = GameObject.Find("Score 1").GetComponent<Text>();
-        player2Text = GameObject.Find("Score 2").GetComponent<Text>();
+        player1Text = GameObject.Find("Score 1").GetComponent<TextMeshProUGUI>();
+        player2Text = GameObject.Find("Score 2").GetComponent<TextMeshProUGUI>();
         uiCanvas = GameObject.Find("UI").GetComponent<Canvas>();
         loadingScreen = GameObject.Find("Loading Screen");
         winScreen = GameObject.Find("Win Screen");
@@ -60,8 +60,8 @@ public class game_controller_script : MonoBehaviour {
         player2 = GameObject.Find("Player2").GetComponent<player_move>();
     }
     void updateScore() {
-        player1Text.text = player1Score.ToString();
-        player2Text.text = player2Score.ToString();
+        player1Text.SetText(player1Score.ToString());
+        player2Text.SetText(player2Score.ToString());
     }
 
     void showUI(bool shouldShow)
