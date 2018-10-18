@@ -712,9 +712,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 71b381d3-6376-4b0a-9096-1b91ea21884a
+  cloudProjectId: 05988f31-e246-4eed-81ab-2971fea27796
   projectName: CubeStomp
-  organizationId: champsupport
+  organizationId: vyncible
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
