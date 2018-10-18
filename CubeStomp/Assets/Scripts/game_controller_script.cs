@@ -20,6 +20,7 @@ public class game_controller_script : MonoBehaviour {
     int currentScene;
     int nextSceneToLoad;
     TextMeshProUGUI player1Text, player2Text;
+    [SerializeField]
     Canvas uiCanvas;
     GameObject loadingScreen;
     GameObject winScreen;
@@ -40,9 +41,9 @@ public class game_controller_script : MonoBehaviour {
     }
     // Use this for initialization
     void Start() {
+        uiCanvas.enabled = true;
         player1Text = GameObject.Find("Score 1").GetComponent<TextMeshProUGUI>();
         player2Text = GameObject.Find("Score 2").GetComponent<TextMeshProUGUI>();
-        uiCanvas = GameObject.Find("UI").GetComponent<Canvas>();
         loadingScreen = GameObject.Find("Loading Screen");
         winScreen = GameObject.Find("Win Screen");
         Debug.Assert(player1Text && player2Text);
