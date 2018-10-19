@@ -14,6 +14,8 @@ enum Scenes
 }
 
 public class game_controller_script : MonoBehaviour {
+    [SerializeField]
+    int firstLevelToLoad;
     public static game_controller_script GAME_CONTROLLER;
     public int player1Score, player2Score;
     public int scoreToWin = 3; //public to be accessed in menu
@@ -52,7 +54,8 @@ public class game_controller_script : MonoBehaviour {
         showLoadingScreen(false);
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
-        currentScene = (int)Scenes.START;
+        //for easier dev.
+        currentScene = firstLevelToLoad;//(int)Scenes.START;
         SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
 
 

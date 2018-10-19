@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum TAGS
+{ //these correspond to tags in game.
+    NONE = -1,
+    WALL,
+    GROUND,
+    PLAYER
+}
 public class player_move : MonoBehaviour
 {
     [SerializeField]
@@ -18,21 +25,20 @@ public class player_move : MonoBehaviour
     public float smashSpeed = 1200;
     public float frozenTime = 0.5f;
     private float moveDirection;
-    public bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
-    //^public to be accessed by the bottom_collider_script
+    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
+    TAGS botColl = TAGS.NONE
+        , rightColl = TAGS.NONE
+        , leftColl = TAGS.NONE
+        , topColl = TAGS.NONE;
     bool isFrozen;
     float maxHealth = 50;
     private game_controller_script gcs;
-    private cube_spitter_script cubeSpitter;
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
     public LayerMask groundMask;
     public LayerMask playerMask;
-    private Transform bottomCollider;
-    public bool touching_enemyBottom, touching_enemySide, touching_enemyTop;
     Vector2 startPosit;
     Vector3 startSize;
-    Vector3 bottomColliderStartSize;
 
     // Use this for initialization
     void Start()
@@ -41,13 +47,11 @@ public class player_move : MonoBehaviour
         Debug.Assert(rb);
         gcs = game_controller_script.GAME_CONTROLLER;
         Debug.Assert(gcs);
-        cubeSpitter = gameObject.GetComponentInChildren<cube_spitter_script>();
         startPosit = transform.position;
         startSize = transform.localScale;
         // Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
-        bottomCollider = transform.Find("Bottom Collider");
         if (gameObject.name == ("Player1"))
         {
             playerNum = 1;
@@ -56,14 +60,116 @@ public class player_move : MonoBehaviour
         {
             playerNum = 2;
         }
-
-        //used to reset the bottom collider size.
-        //this is expensive, but it's in start, and the math is a pain.
-        bottomCollider.parent = null;
-        bottomColliderStartSize = bottomCollider.localScale;
-        bottomCollider.parent = transform;
     }
 
+    private void OnCollisionEnter2D(Collision2D coll)
+    {
+        TAGS collTag = TAGS.NONE;
+        string tag = coll.gameObject.tag;
+        if (tag == "Ground")
+        {
+            collTag = TAGS.GROUND;
+        }
+        else if ( tag == "Wall")
+        {
+            collTag = TAGS.WALL;
+        }
+        else if (tag == "Player")
+        {
+            collTag = TAGS.PLAYER;
+        }
+        else
+        { //not a type we care about so ignore.
+            return;
+        }
+        Vector2 contactPoint = coll.GetContact(coll.contactCount).point; //get a contact point
+        if(contactPoint.x != coll.GetContact(0).point.x) //if points aren't on the same x-axis
+        {//point is on the top / bottom
+            if(contactPoint.y < transform.position.y) //on the bottom
+            {
+                botColl = collTag;
+            }
+            else
+            {
+                topColl = collTag;
+            }
+        }
+        else if (contactPoint.y != coll.GetContact(0).point.y)
+        {
+            if(contactPoint.x < transform.position.x) // on the left
+            {
+                leftColl = collTag;
+            }
+            else
+            {
+                rightColl = collTag;
+            }
+        }
+        else
+        {
+            Debug.Log("Error in collider positioning");
+        }
+
+    }
+    private void OnCollisionExit2D(Collision2D coll)
+    {
+        TAGS collTag = TAGS.NONE;
+        string tag = coll.gameObject.tag;
+        if (tag == "Ground")
+        {
+            collTag = TAGS.GROUND;
+        }
+        else if (tag == "Wall")
+        {
+            collTag = TAGS.WALL;
+        }
+        else if (tag == "Player")
+        {
+            collTag = TAGS.PLAYER;
+        }
+        else
+        { //not a type we care about so ignore.
+            return;
+        }
+        Vector2 contactPoint = coll.GetContact(coll.contactCount).point; //get a contact point
+        if (contactPoint.x != coll.GetContact(0).point.x) //if points aren't on the same x-axis
+        {//point is on the top / bottom
+            if (contactPoint.y < transform.position.y) //on the bottom
+            {
+                if (botColl != collTag)
+                    Debug.Log("Colliders don't match");
+                botColl = TAGS.NONE;
+            }
+            else
+            {
+                if (topColl != collTag)
+                    Debug.Log("CollidersDon'tMatch");
+                
+                topColl = TAGS.NONE;
+            }
+        }
+        else if (contactPoint.y != coll.GetContact(0).point.y)
+        {
+            if (contactPoint.x < transform.position.x) // on the left
+            {
+                if (leftColl != collTag)
+                    Debug.Log("Colliders Don't Match");
+                leftColl = TAGS.NONE;
+
+            }
+            else
+            {
+                if (rightColl != collTag)
+                    Debug.Log("Colliders don't match");
+                rightColl = TAGS.NONE;
+            }
+        }
+        else
+        {
+            Debug.Log("Error in collider positioning");
+        }
+
+    }
     public void GameStarted()
     {
         resetPlayer();
@@ -78,12 +184,7 @@ public class player_move : MonoBehaviour
         transform.position = startPosit;
         transform.localScale = startSize;
         gameObject.SetActive(true);
-        touching_enemyBottom = false;
 
-        //reset the bottom collider size. this is expensive.
-        bottomCollider.parent = null;
-        bottomCollider.localScale = bottomColliderStartSize;
-        bottomCollider.parent = transform;
     }
     // Update is called once per frame
     void Update()
