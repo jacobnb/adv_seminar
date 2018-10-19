@@ -82,7 +82,11 @@ public class player_move : MonoBehaviour
         { //not a type we care about so ignore.
             return;
         }
-        Vector2 contactPoint = coll.GetContact(coll.contactCount).point; //get a contact point
+        if(coll.contactCount <= 0)
+        {
+            return;
+        }
+        Vector2 contactPoint = coll.GetContact(coll.contactCount-1).point; //get a contact point
         if(contactPoint.x != coll.GetContact(0).point.x) //if points aren't on the same x-axis
         {//point is on the top / bottom
             if(contactPoint.y < transform.position.y) //on the bottom
@@ -131,6 +135,10 @@ public class player_move : MonoBehaviour
         { //not a type we care about so ignore.
             return;
         }
+        if (coll.contactCount <= 0)
+        {
+            return;
+        }
         Vector2 contactPoint = coll.GetContact(coll.contactCount).point; //get a contact point
         if (contactPoint.x != coll.GetContact(0).point.x) //if points aren't on the same x-axis
         {//point is on the top / bottom
@@ -169,7 +177,7 @@ public class player_move : MonoBehaviour
             Debug.Log("Error in collider positioning");
         }
 
-    }
+     }
     public void GameStarted()
     {
         resetPlayer();
@@ -217,13 +225,10 @@ public class player_move : MonoBehaviour
 
     void checkForDamage()
     {
-        if (!touching_enemySide && canJump && touching_enemyBottom)
+        if (botColl == TAGS.GROUND && topColl == TAGS.PLAYER) //if on the ground and opponent is on top
         {
-            StartCoroutine(cubeSpitter.spawnCubes());
+            //Start damage anim StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
-            bottomCollider.localScale = new Vector3(bottomCollider.localScale.x, bottomCollider.localScale.y + 0.05f, bottomCollider.localScale.z);
-            //this is a hack to keep the bottom collider the right size.
-
             if (transform.localScale.y < 0.01)
             {
                 gcs.playerLost(playerNum);
@@ -237,8 +242,8 @@ public class player_move : MonoBehaviour
         rb.AddForce(new Vector2(0f, -smashSpeed));
         //raycast down, if hit player freeze player.
         //example StartCoroutine(Camera.main.GetComponent<myTimer>().Counter());
-        Vector2 boxSize = new Vector2(bottomCollider.gameObject.GetComponent<BoxCollider2D>().bounds.size.x, bottomCollider.gameObject.GetComponent<Collider2D>().bounds.size.y);
-        RaycastHit2D hitPlayer = Physics2D.BoxCast(bottomCollider.position, boxSize, 0f, Vector2.down, 100f, playerMask);
+        Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, gameObject.GetComponent<Collider2D>().bounds.size.y);
+        RaycastHit2D hitPlayer = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.down, 100f, playerMask);
         if (hitPlayer.collider)
         {
             StartCoroutine(hitPlayer.transform.GetComponent<player_move>().freeze(frozenTime));
@@ -326,7 +331,7 @@ public class player_move : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0.0f);
         rb.AddForce(new Vector2(0f, jumpHeight));
-        if (touching_enemySide || touching_enemyTop)
+        if (botColl == TAGS.PLAYER || leftColl == TAGS.PLAYER || rightColl == TAGS.PLAYER)
         {
             enemy_moveScript.jumpedOff();
         }
