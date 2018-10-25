@@ -9,8 +9,8 @@ public class player_move : MonoBehaviour
     enum TAGS
     { //these correspond to tags in game.
         NONE = 0,
-        WALL,
         GROUND,
+        WALL,
         PLAYER
     }
     [SerializeField]
@@ -34,7 +34,7 @@ public class player_move : MonoBehaviour
     //used in collisions array to get location
     enum CollisionsLoc {botColl, rightColl, leftColl, topColl}; 
     bool isFrozen;
-    float maxHealth = 50;
+    float maxHealth = 40;
     private game_controller_script gcs;
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
@@ -74,18 +74,31 @@ public class player_move : MonoBehaviour
             anim_script.setAllDusts(false, false, false);
             return;
         }
+        //if on top of player show dust.
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
         {
             anim_script.setAllDusts(false, false, true);
             return;
         }
+        //if it hasn't returned by now, nothings on the bottom
+        anim_script.bottomDust(false);
+        //left side
         if(collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
         {
             anim_script.leftDust(true);
         }
+        else
+        {
+            anim_script.leftDust(false);
+        }
+        //right side
         if(collisions[(int)CollisionsLoc.rightColl] != TAGS.NONE)
         {
             anim_script.rightDust(true);
+        }
+        else
+        {
+            anim_script.rightDust(false);
         }
     }
     private void OnCollisionEnter2D(Collision2D coll)
@@ -192,21 +205,29 @@ public class player_move : MonoBehaviour
     }
     void checkForGround()
     {
-        bool touchingWallOrPlayer = false; //also touching player
-        foreach(TAGS touching in collisions)
+        //if touching ground or on top of enemy
+        if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND
+            || collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
         {
-            if(touching == TAGS.GROUND) {
-                canJump = true;
-                doubleJump = true;
-                wallJump = false;
-                return; //if player is touching ground, we don't care about the rest.
-            }
-            if (touching == TAGS.PLAYER || touching == TAGS.WALL)
-            {
-                touchingWallOrPlayer = true; //Or should we enable double jump if it's not enabled?
-            } 
+            canJump = true;
+            doubleJump = true;
+            wallJump = false;
+            return;
         }
-        wallJump = touchingWallOrPlayer;
+        else
+        {
+            canJump = false;
+        }
+        //if side is touching player or wall
+        if(collisions[(int)CollisionsLoc.leftColl] > TAGS.GROUND 
+            || collisions[(int)CollisionsLoc.rightColl] > TAGS.GROUND)
+        {
+            wallJump = true;
+        }
+        else
+        {
+            wallJump = false;
+        }
     }
     // Update is called once per frame
     void Update()
