@@ -14,7 +14,7 @@ enum Scenes
 }
 
 public class game_controller_script : MonoBehaviour {
-    [SerializeField]
+    [SerializeField] //for dev
     int firstLevelToLoad;
     public static game_controller_script GAME_CONTROLLER;
     public int player1Score, player2Score;
@@ -54,9 +54,15 @@ public class game_controller_script : MonoBehaviour {
         showLoadingScreen(false);
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
-        //for easier dev.
-        currentScene = firstLevelToLoad;//(int)Scenes.START;
+        currentScene = (int)Scenes.START;
+
+        //if dev.
+        currentScene = firstLevelToLoad;
+        showUI(true);
+        //end if dev
+
         SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
+        
 
 
         //replace with messaging system
@@ -128,11 +134,12 @@ public class game_controller_script : MonoBehaviour {
 
 
     IEnumerator loadNextScene(float delay = 0f) {
+        //if scene not already loaded.
         if (currentScene != nextSceneToLoad)
         {
             yield return new WaitForSeconds(delay);
             showLoadingScreen(true);
-            AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene); //wait for this to finish and add a loading screen;
+            AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene); 
             Debug.Log("Unloaded Scene" + currentScene);
             yield return unload; //wait for scene to be unloaded. 
                                  //https://stackoverflow.com/questions/50502394/how-can-i-wait-for-a-scene-to-unload
@@ -153,17 +160,15 @@ public class game_controller_script : MonoBehaviour {
         //set == in loadNextScene.
         if(currentScene == nextSceneToLoad)
         {
-            player1.GameStarted();
-            player2.GameStarted();
-            showLoadingScreen(false);
+            levelLoaded();
         }
     }
 
     void levelLoaded()
     {
-        showLoadingScreen(false);
         player1.GameStarted();
         player2.GameStarted();
+        showLoadingScreen(false);
     }
     void nextScene()
     {

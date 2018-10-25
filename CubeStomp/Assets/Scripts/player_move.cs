@@ -4,11 +4,12 @@ using UnityEngine;
 
 enum TAGS
 { //these correspond to tags in game.
-    NONE = -1,
+    NONE = 0,
     WALL,
     GROUND,
     PLAYER
 }
+
 public class player_move : MonoBehaviour
 {
     [SerializeField]
@@ -26,10 +27,10 @@ public class player_move : MonoBehaviour
     public float frozenTime = 0.5f;
     private float moveDirection;
     bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
-    TAGS botColl = TAGS.NONE
-        , rightColl = TAGS.NONE
-        , leftColl = TAGS.NONE
-        , topColl = TAGS.NONE;
+    [SerializeField]
+    TAGS[] collisions = new TAGS[4];
+    //used in collisions array to get location
+    enum CollisionsLoc:int {botColl, rightColl, leftColl, topColl}; //avoids casting to int, but could overwrite.
     bool isFrozen;
     float maxHealth = 50;
     private game_controller_script gcs;
@@ -80,6 +81,7 @@ public class player_move : MonoBehaviour
         }
         else
         { //not a type we care about so ignore.
+            Debug.Log("GameObject does not have recognized tag");
             return;
         }
         if(coll.contactCount <= 0)
@@ -91,22 +93,22 @@ public class player_move : MonoBehaviour
         {//point is on the top / bottom
             if(contactPoint.y < transform.position.y) //on the bottom
             {
-                botColl = collTag;
+                collisions[(int)CollisionsLoc.botColl] = collTag;
             }
             else
             {
-                topColl = collTag;
+                collisions[(int)CollisionsLoc.topColl] = collTag;
             }
         }
         else if (contactPoint.y != coll.GetContact(0).point.y)
         {
             if(contactPoint.x < transform.position.x) // on the left
             {
-                leftColl = collTag;
+                collisions[(int)CollisionsLoc.leftColl] = collTag;
             }
             else
             {
-                rightColl = collTag;
+                collisions[(int)CollisionsLoc.rightColl] = collTag;
             }
         }
         else
@@ -135,48 +137,13 @@ public class player_move : MonoBehaviour
         { //not a type we care about so ignore.
             return;
         }
-        if (coll.contactCount <= 0)
+        for(int i = 0; i < collisions.Length; i++)
         {
-            return;
-        }
-        Vector2 contactPoint = coll.GetContact(coll.contactCount).point; //get a contact point
-        if (contactPoint.x != coll.GetContact(0).point.x) //if points aren't on the same x-axis
-        {//point is on the top / bottom
-            if (contactPoint.y < transform.position.y) //on the bottom
+            if(collisions[i] == collTag)
             {
-                if (botColl != collTag)
-                    Debug.Log("Colliders don't match");
-                botColl = TAGS.NONE;
-            }
-            else
-            {
-                if (topColl != collTag)
-                    Debug.Log("CollidersDon'tMatch");
-                
-                topColl = TAGS.NONE;
+                collisions[i] = TAGS.NONE;
             }
         }
-        else if (contactPoint.y != coll.GetContact(0).point.y)
-        {
-            if (contactPoint.x < transform.position.x) // on the left
-            {
-                if (leftColl != collTag)
-                    Debug.Log("Colliders Don't Match");
-                leftColl = TAGS.NONE;
-
-            }
-            else
-            {
-                if (rightColl != collTag)
-                    Debug.Log("Colliders don't match");
-                rightColl = TAGS.NONE;
-            }
-        }
-        else
-        {
-            Debug.Log("Error in collider positioning");
-        }
-
      }
     public void GameStarted()
     {
@@ -191,13 +158,35 @@ public class player_move : MonoBehaviour
         rb.velocity = Vector2.zero;
         transform.position = startPosit;
         transform.localScale = startSize;
+        for(int i =0; i < collisions.Length; i++)
+        {
+            collisions[i] = TAGS.NONE;
+        }
         gameObject.SetActive(true);
 
+    }
+    void checkForGround()
+    {
+        bool touchingWallOrPlayer = false; //also touching player
+        foreach(TAGS touching in collisions)
+        {
+            if(touching == TAGS.GROUND) {
+                canJump = true;
+                doubleJump = true;
+                wallJump = false;
+                return; //if player is touching ground, we don't care about the rest.
+            }
+            if (touching == TAGS.PLAYER || touching == TAGS.WALL)
+            {
+                touchingWallOrPlayer = true; //Or should we enable double jump if it's not enabled?
+            } 
+        }
+        wallJump = touchingWallOrPlayer;
     }
     // Update is called once per frame
     void Update()
     {
-        
+        checkForGround();
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
@@ -225,7 +214,8 @@ public class player_move : MonoBehaviour
 
     void checkForDamage()
     {
-        if (botColl == TAGS.GROUND && topColl == TAGS.PLAYER) //if on the ground and opponent is on top
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND && collisions[(int)CollisionsLoc.topColl] == TAGS.PLAYER) 
+            //if on the ground and opponent is on top
         {
             //Start damage anim StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
@@ -331,7 +321,9 @@ public class player_move : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0.0f);
         rb.AddForce(new Vector2(0f, jumpHeight));
-        if (botColl == TAGS.PLAYER || leftColl == TAGS.PLAYER || rightColl == TAGS.PLAYER)
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER 
+            || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER 
+            || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
         {
             enemy_moveScript.jumpedOff();
         }
