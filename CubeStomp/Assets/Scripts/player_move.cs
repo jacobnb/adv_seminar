@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum TAGS
-{ //these correspond to tags in game.
-    NONE = 0,
-    WALL,
-    GROUND,
-    PLAYER
-}
+
 
 public class player_move : MonoBehaviour
 {
+    enum TAGS
+    { //these correspond to tags in game.
+        NONE = 0,
+        WALL,
+        GROUND,
+        PLAYER
+    }
     [SerializeField]
     bool enableAI = false;
     public player_move enemy_moveScript;
     public touch_joystick_script joystick_script;
+    private player_anim_script anim_script;
     [SerializeField]
     Touchable.touch_object upButton_script;
     [SerializeField]
@@ -30,7 +32,7 @@ public class player_move : MonoBehaviour
     [SerializeField]
     TAGS[] collisions = new TAGS[4];
     //used in collisions array to get location
-    enum CollisionsLoc:int {botColl, rightColl, leftColl, topColl}; //avoids casting to int, but could overwrite.
+    enum CollisionsLoc {botColl, rightColl, leftColl, topColl}; 
     bool isFrozen;
     float maxHealth = 50;
     private game_controller_script gcs;
@@ -48,6 +50,7 @@ public class player_move : MonoBehaviour
         Debug.Assert(rb);
         gcs = game_controller_script.GAME_CONTROLLER;
         Debug.Assert(gcs);
+        anim_script = gameObject.GetComponent<player_anim_script>();
         startPosit = transform.position;
         startSize = transform.localScale;
         // Debug.Assert(cubeSpitter);
@@ -63,6 +66,28 @@ public class player_move : MonoBehaviour
         }
     }
 
+    private void setAnimations()
+    {
+        //If touching ground do nothing
+        if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
+        {
+            anim_script.setAllDusts(false, false, false);
+            return;
+        }
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
+        {
+            anim_script.setAllDusts(false, false, true);
+            return;
+        }
+        if(collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
+        {
+            anim_script.leftDust(true);
+        }
+        if(collisions[(int)CollisionsLoc.rightColl] != TAGS.NONE)
+        {
+            anim_script.rightDust(true);
+        }
+    }
     private void OnCollisionEnter2D(Collision2D coll)
     {
         TAGS collTag = TAGS.NONE;
@@ -187,6 +212,7 @@ public class player_move : MonoBehaviour
     void Update()
     {
         checkForGround();
+        setAnimations();
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
