@@ -34,7 +34,7 @@ public class player_move : MonoBehaviour
     //used in collisions array to get location
     enum CollisionsLoc {botColl, rightColl, leftColl, topColl}; 
     bool isFrozen;
-    float maxHealth = 40;
+    float maxHealth = 20;
     private game_controller_script gcs;
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
@@ -332,37 +332,27 @@ public class player_move : MonoBehaviour
         }
         if (shouldJump)
         {
-            if (checkJump())
-            {
-                jump();
-            }
+            checkJump();
             shouldJump = false;
         }
     }
 
-    bool checkJump()
+    void checkJump()
     {
         if (canJump)
         {
             canJump = false;
             wallJump = false;
-            return true;
+            jump();
         }
         else if (wallJump)
         {
-            wallJump = false;
-            return true;
+            jumpedOff();
         }
         else if (doubleJump)
         {
-            doubleJump = false;
-            return true;
+            jump();
         }
-        else
-        {
-            return false;
-        }
-
     }
     void jump()
     {
@@ -370,6 +360,18 @@ public class player_move : MonoBehaviour
         rb.AddForce(new Vector2(0f, jumpHeight));
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER 
             || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER 
+            || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
+        {
+            enemy_moveScript.jumpedOff();
+        }
+    }
+    void jumpOff()
+    {
+        //Add impulse off of wall.
+        rb.velocity = new Vector2(rb.velocity.x, 0.0f);
+        rb.AddForce(new Vector2(0f, jumpHeight));
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER
+            || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER
             || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
         {
             enemy_moveScript.jumpedOff();
