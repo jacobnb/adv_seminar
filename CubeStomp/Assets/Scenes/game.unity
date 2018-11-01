@@ -2869,15 +2869,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableAI: 0
-  enemy_moveScript: {fileID: 1928814959}
-  joystick_script: {fileID: 1731859334}
-  upButton_script: {fileID: 1248762716}
-  downButton_script: {fileID: 1619430310}
   playerNum: 2
   moveSpeed: 20
   jumpHeight: 900
   smashSpeed: 1200
   frozenTime: 0.25
+  wallJumpForce: 10
+  joystick_script: {fileID: 1731859334}
+  upButton_script: {fileID: 1248762716}
+  downButton_script: {fileID: 1619430310}
+  enemy_moveScript: {fileID: 1928814959}
   collisions: 00000000000000000000000000000000
   groundDistance: 0.25
   groundMask:
@@ -4242,7 +4243,7 @@ Camera:
   far clip plane: 5000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.7353163
+  orthographic size: 7.73437
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4315,15 +4316,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableAI: 0
-  enemy_moveScript: {fileID: 1337790765}
-  joystick_script: {fileID: 436433929}
-  upButton_script: {fileID: 564169203}
-  downButton_script: {fileID: 1248493527}
   playerNum: 1
   moveSpeed: 20
   jumpHeight: 900
   smashSpeed: 1200
   frozenTime: 0.25
+  wallJumpForce: 0
+  joystick_script: {fileID: 436433929}
+  upButton_script: {fileID: 564169203}
+  downButton_script: {fileID: 1248493527}
+  enemy_moveScript: {fileID: 1337790765}
   collisions: 00000000000000000000000000000000
   groundDistance: 0.05
   groundMask:

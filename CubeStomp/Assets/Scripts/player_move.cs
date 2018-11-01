@@ -13,22 +13,35 @@ public class player_move : MonoBehaviour
         WALL,
         PLAYER
     }
+
+    [Header("Dev Variables")]
     [SerializeField]
     bool enableAI = false;
-    public player_move enemy_moveScript;
-    public touch_joystick_script joystick_script;
-    private player_anim_script anim_script;
-    [SerializeField]
-    Touchable.touch_object upButton_script;
-    [SerializeField]
-    Touchable.touch_object downButton_script;
+
+    [Header("Movement")]
+    [Tooltip("This be tooltip")]
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
     public float smashSpeed = 1200;
     public float frozenTime = 0.5f;
+    [SerializeField]
+    float wallJumpForce = 10;
+
+    [Header("Touch Controls")]
+    public touch_joystick_script joystick_script;
+    [SerializeField]
+    Touchable.touch_object upButton_script;
+    [SerializeField]
+    Touchable.touch_object downButton_script;
+
+
+
+    public player_move enemy_moveScript;
+    private player_anim_script anim_script;
+    
     private float moveDirection;
-    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
+    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped;
     [SerializeField]
     TAGS[] collisions = new TAGS[4];
     //used in collisions array to get location
@@ -56,6 +69,7 @@ public class player_move : MonoBehaviour
         // Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
+        hasWallJumped = false;
         if (gameObject.name == ("Player1"))
         {
             playerNum = 1;
@@ -212,6 +226,7 @@ public class player_move : MonoBehaviour
             canJump = true;
             doubleJump = true;
             wallJump = false;
+            hasWallJumped = false;
             return;
         }
         else
@@ -369,9 +384,34 @@ public class player_move : MonoBehaviour
     }
     void jumpOff()
     {
+        //disable multiple wall jumps
+        if (hasWallJumped)
+        {
+            if (doubleJump)
+            {
+                jump();
+                doubleJump = false;
+            }
+            return;
+        }
+        else
+        {
+            hasWallJumped = true;
+        }
         //Add impulse off of wall.
-        rb.velocity = new Vector2(rb.velocity.x, 0.0f);
-        rb.AddForce(new Vector2(0f, jumpHeight));
+        //This gets erased by movement I think
+        float wallForce;
+        if(collisions[(int)CollisionsLoc.rightColl] == TAGS.WALL)
+        {
+            wallForce = -wallJumpForce;
+        }
+        else
+        {
+            wallForce = wallJumpForce;
+        }
+        rb.velocity = new Vector2(0.0f, 0.0f);//Zero velocity
+
+        rb.AddForce(new Vector2(wallForce, jumpHeight));
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER
             || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER
             || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
