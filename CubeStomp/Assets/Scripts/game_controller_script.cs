@@ -15,8 +15,10 @@ enum Scenes
 
 public class game_controller_script : MonoBehaviour {
     [SerializeField] //for dev
-    int firstLevelToLoad;
+    private int firstLevelToLoad;
     public static game_controller_script GAME_CONTROLLER;
+    [SerializeField]
+    private disable_cinemachine cinemachine_script;
     public int player1Score, player2Score;
     public int scoreToWin = 3; //public to be accessed in menu
     int currentScene;
@@ -24,6 +26,7 @@ public class game_controller_script : MonoBehaviour {
     TextMeshProUGUI player1Text, player2Text;
     [SerializeField]
     Canvas uiCanvas;
+    
     GameObject loadingScreen;
     GameObject winScreen;
     player_move player1, player2; //replace with messaging system?
@@ -50,15 +53,18 @@ public class game_controller_script : MonoBehaviour {
         winScreen = GameObject.Find("Win Screen");
         Debug.Assert(player1Text && player2Text);
         updateScore();
-        showUI(false);
+        showUI(false); 
         showLoadingScreen(false);
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         currentScene = (int)Scenes.START;
+        //disable cinemachine
 
         //if dev.
         currentScene = firstLevelToLoad;
         showUI(true);
+        //cinemachine_script.enableCinemachine(true);
+
         //end if dev
 
         SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
@@ -147,6 +153,14 @@ public class game_controller_script : MonoBehaviour {
             if (currentScene == (int)Scenes.START || currentScene == (int)Scenes.MENU)
             {
                 levelLoaded();
+            }
+            if(nextSceneToLoad == (int)Scenes.START || nextSceneToLoad == (int)Scenes.MENU)
+            {
+                cinemachine_script.enableCinemachine(false);
+            }
+            else
+            {
+                cinemachine_script.enableCinemachine(true);
             }
             currentScene = nextSceneToLoad;
         }

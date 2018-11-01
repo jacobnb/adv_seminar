@@ -2,37 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum TAGS
-{ //these correspond to tags in game.
-    NONE = 0,
-    WALL,
-    GROUND,
-    PLAYER
-}
+
 
 public class player_move : MonoBehaviour
 {
+    enum TAGS
+    { //these correspond to tags in game.
+        NONE = 0,
+        GROUND,
+        WALL,
+        PLAYER
+    }
+
+    [Header("Dev Variables")]
     [SerializeField]
     bool enableAI = false;
-    public player_move enemy_moveScript;
-    public touch_joystick_script joystick_script;
-    [SerializeField]
-    Touchable.touch_object upButton_script;
-    [SerializeField]
-    Touchable.touch_object downButton_script;
+
+    [Header("Movement")]
+    [Tooltip("This be tooltip")]
     public int playerNum;
     public float moveSpeed = 10;
     public float jumpHeight = 10;
     public float smashSpeed = 1200;
     public float frozenTime = 0.5f;
+    [SerializeField]
+    float wallJumpForce = 10;
+
+    [Header("Touch Controls")]
+    public touch_joystick_script joystick_script;
+    [SerializeField]
+    Touchable.touch_object upButton_script;
+    [SerializeField]
+    Touchable.touch_object downButton_script;
+
+
+
+    public player_move enemy_moveScript;
+    private player_anim_script anim_script;
+    
     private float moveDirection;
-    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump;
+    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped;
     [SerializeField]
     TAGS[] collisions = new TAGS[4];
     //used in collisions array to get location
-    enum CollisionsLoc:int {botColl, rightColl, leftColl, topColl}; //avoids casting to int, but could overwrite.
+    enum CollisionsLoc {botColl, rightColl, leftColl, topColl}; 
     bool isFrozen;
-    float maxHealth = 50;
+    float maxHealth = 20;
     private game_controller_script gcs;
     public float groundDistance = 3.02f;
     private Rigidbody2D rb;
@@ -48,11 +63,13 @@ public class player_move : MonoBehaviour
         Debug.Assert(rb);
         gcs = game_controller_script.GAME_CONTROLLER;
         Debug.Assert(gcs);
+        anim_script = gameObject.GetComponent<player_anim_script>();
         startPosit = transform.position;
         startSize = transform.localScale;
         // Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
+        hasWallJumped = false;
         if (gameObject.name == ("Player1"))
         {
             playerNum = 1;
@@ -63,6 +80,41 @@ public class player_move : MonoBehaviour
         }
     }
 
+    private void setAnimations()
+    {
+        //If touching ground do nothing
+        if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
+        {
+            anim_script.setAllDusts(false, false, false);
+            return;
+        }
+        //if on top of player show dust.
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
+        {
+            anim_script.setAllDusts(false, false, true);
+            return;
+        }
+        //if it hasn't returned by now, nothings on the bottom
+        anim_script.bottomDust(false);
+        //left side
+        if(collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
+        {
+            anim_script.leftDust(true);
+        }
+        else
+        {
+            anim_script.leftDust(false);
+        }
+        //right side
+        if(collisions[(int)CollisionsLoc.rightColl] != TAGS.NONE)
+        {
+            anim_script.rightDust(true);
+        }
+        else
+        {
+            anim_script.rightDust(false);
+        }
+    }
     private void OnCollisionEnter2D(Collision2D coll)
     {
         TAGS collTag = TAGS.NONE;
@@ -167,26 +219,36 @@ public class player_move : MonoBehaviour
     }
     void checkForGround()
     {
-        bool touchingWallOrPlayer = false; //also touching player
-        foreach(TAGS touching in collisions)
+        //if touching ground or on top of enemy
+        if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND
+            || collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
         {
-            if(touching == TAGS.GROUND) {
-                canJump = true;
-                doubleJump = true;
-                wallJump = false;
-                return; //if player is touching ground, we don't care about the rest.
-            }
-            if (touching == TAGS.PLAYER || touching == TAGS.WALL)
-            {
-                touchingWallOrPlayer = true; //Or should we enable double jump if it's not enabled?
-            } 
+            canJump = true;
+            doubleJump = true;
+            wallJump = false;
+            hasWallJumped = false;
+            return;
         }
-        wallJump = touchingWallOrPlayer;
+        else
+        {
+            canJump = false;
+        }
+        //if side is touching player or wall
+        if(collisions[(int)CollisionsLoc.leftColl] > TAGS.GROUND 
+            || collisions[(int)CollisionsLoc.rightColl] > TAGS.GROUND)
+        {
+            wallJump = true;
+        }
+        else
+        {
+            wallJump = false;
+        }
     }
     // Update is called once per frame
     void Update()
     {
         checkForGround();
+        setAnimations();
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
@@ -285,37 +347,29 @@ public class player_move : MonoBehaviour
         }
         if (shouldJump)
         {
-            if (checkJump())
-            {
-                jump();
-            }
+            checkJump();
             shouldJump = false;
         }
     }
 
-    bool checkJump()
+    void checkJump()
     {
         if (canJump)
         {
             canJump = false;
             wallJump = false;
-            return true;
+            jump();
         }
         else if (wallJump)
         {
+            jumpOff();
             wallJump = false;
-            return true;
         }
         else if (doubleJump)
         {
+            jump();
             doubleJump = false;
-            return true;
         }
-        else
-        {
-            return false;
-        }
-
     }
     void jump()
     {
@@ -323,6 +377,43 @@ public class player_move : MonoBehaviour
         rb.AddForce(new Vector2(0f, jumpHeight));
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER 
             || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER 
+            || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
+        {
+            enemy_moveScript.jumpedOff();
+        }
+    }
+    void jumpOff()
+    {
+        //disable multiple wall jumps
+        if (hasWallJumped)
+        {
+            if (doubleJump)
+            {
+                jump();
+                doubleJump = false;
+            }
+            return;
+        }
+        else
+        {
+            hasWallJumped = true;
+        }
+        //Add impulse off of wall.
+        //This gets erased by movement I think
+        float wallForce;
+        if(collisions[(int)CollisionsLoc.rightColl] == TAGS.WALL)
+        {
+            wallForce = -wallJumpForce;
+        }
+        else
+        {
+            wallForce = wallJumpForce;
+        }
+        rb.velocity = new Vector2(0.0f, 0.0f);//Zero velocity
+
+        rb.AddForce(new Vector2(wallForce, jumpHeight));
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER
+            || collisions[(int)CollisionsLoc.leftColl] == TAGS.PLAYER
             || collisions[(int)CollisionsLoc.rightColl] == TAGS.PLAYER)
         {
             enemy_moveScript.jumpedOff();
