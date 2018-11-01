@@ -11,11 +11,11 @@ public class player_anim_script : MonoBehaviour {
 
     }
 
-    public void setAllDusts(bool left, bool right, bool bottom)
+    public void setAllDusts(bool left, bool right, bool top)
     {
         leftDust(left);
         rightDust(right);
-        bottomDust(bottom);
+        topDust(top);
     }
     public void leftDust(bool enabled)
     {
@@ -39,7 +39,7 @@ public class player_anim_script : MonoBehaviour {
             rightCloud.Stop();
         }
     }
-    public void bottomDust(bool enabled)
+    public void topDust(bool enabled)
     {
         if (enabled)
         {

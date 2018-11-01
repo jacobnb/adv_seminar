@@ -115,6 +115,7 @@ public class player_move : MonoBehaviour
         else if (tag == "Player")
         {
             collTag = TAGS.PLAYER;
+            
         }
         else
         { //not a tag we care about so ignore.
@@ -187,20 +188,21 @@ public class player_move : MonoBehaviour
 
     private void setAnimations()
     {
-        //If touching ground do nothing
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
         {
-            anim_script.setAllDusts(false, false, false);
+            //if on top of player show dust.
+            if (collisions[(int)CollisionsLoc.topColl] == TAGS.PLAYER)
+            {
+                anim_script.setAllDusts(false, false, true);
+            }
+            else
+            //If touching ground do nothing
+            {
+                anim_script.setAllDusts(false, false, false);
+            }
             return;
+            //== THERE IS A RETURN HERE ==//
         }
-        //if on top of player show dust.
-        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
-        {
-            anim_script.setAllDusts(false, false, true);
-            return;
-        }
-        //if it hasn't returned by now, nothing is on the bottom
-        anim_script.bottomDust(false);
         //left side
         if (collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
         {
