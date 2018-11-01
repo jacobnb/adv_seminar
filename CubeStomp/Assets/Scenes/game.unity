@@ -334,7 +334,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.972
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -628,7 +628,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.88
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -865,7 +865,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 13ac127bd922e2343b4142a9bc3cf94e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d92a229531cf7d148bbbc32168dec872, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1432,7 +1432,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.870309
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1934,7 +1934,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -3
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2354,7 +2354,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4832843970020636, guid: 6f87bba8012853c4486e954e0be03f2d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.93
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4832843970020636, guid: 6f87bba8012853c4486e954e0be03f2d, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2415,11 +2415,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstLevelToLoad: 1
-  cinemachine_script: {fileID: 1923244478}
-  player1Score: 0
-  player2Score: 0
   scoreToWin: 3
   uiCanvas: {fileID: 1684068333}
+  cinemachine_script: {fileID: 1923244478}
 --- !u!4 &1058292650
 Transform:
   m_ObjectHideFlags: 0
@@ -2496,7 +2494,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.7783096
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2815,7 +2813,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.013003826}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2826,7 +2824,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 6}
+  m_Size: {x: 2, y: 3.529498}
   m_EdgeRadius: 0
 --- !u!114 &1337790763
 MonoBehaviour:
@@ -2847,7 +2845,7 @@ Transform:
   m_GameObject: {fileID: 1337790760}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.519989, y: -2.5400085, z: 0}
-  m_LocalScale: {x: 1, y: 0.59, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1705152116}
   - {fileID: 495455556}
@@ -2869,21 +2867,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableAI: 0
-  playerNum: 2
+  collisions: 00000000000000000000000000000000
   moveSpeed: 20
   jumpHeight: 900
   smashSpeed: 1200
   frozenTime: 0.25
   wallJumpForce: 10
+  shouldJump: 0
+  canJump: 0
+  doubleJump: 0
+  shouldSmash: 0
+  wallJump: 0
+  hasWallJumped: 0
+  isSmashing: 0
   joystick_script: {fileID: 1731859334}
   upButton_script: {fileID: 1248762716}
   downButton_script: {fileID: 1619430310}
   enemy_moveScript: {fileID: 1928814959}
-  collisions: 00000000000000000000000000000000
-  groundDistance: 0.25
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 768
   playerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -2900,7 +2900,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4832843970020636, guid: 6f87bba8012853c4486e954e0be03f2d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.94
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4832843970020636, guid: 6f87bba8012853c4486e954e0be03f2d, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2946,7 +2946,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.8983092
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4732903265165228, guid: 33a8c61fc3e518b4980cc011e4d40ed9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -4146,7 +4146,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7365e0f5e9e89234091d1293798c387b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ba04002fd2b9da7459f3eba656d04e74, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4243,7 +4243,7 @@ Camera:
   far clip plane: 5000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.73437
+  orthographic size: 12.374992
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4316,21 +4316,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableAI: 0
-  playerNum: 1
+  collisions: 00000000000000000000000000000000
   moveSpeed: 20
   jumpHeight: 900
   smashSpeed: 1200
   frozenTime: 0.25
   wallJumpForce: 0
+  shouldJump: 0
+  canJump: 0
+  doubleJump: 0
+  shouldSmash: 0
+  wallJump: 0
+  hasWallJumped: 0
+  isSmashing: 0
   joystick_script: {fileID: 436433929}
   upButton_script: {fileID: 564169203}
   downButton_script: {fileID: 1248493527}
   enemy_moveScript: {fileID: 1337790765}
-  collisions: 00000000000000000000000000000000
-  groundDistance: 0.05
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 768
   playerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -4368,7 +4370,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.007082224}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4379,7 +4381,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 6}
+  m_Size: {x: 2, y: 3.5460029}
   m_EdgeRadius: 0
 --- !u!114 &1928814962
 MonoBehaviour:
@@ -4401,7 +4403,7 @@ Transform:
   m_GameObject: {fileID: 1928814958}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5.279999, y: -2.480011, z: 0}
-  m_LocalScale: {x: 1, y: 0.59, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 402875342}
   - {fileID: 184978550}
