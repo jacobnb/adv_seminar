@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Object pool of "cubes" that can be thrown / shot. Bassically a particle system or gun.
 public class cube_spitter_script : MonoBehaviour {
 	GameObject[] cubes;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This controls the little off screen icons (that aren't needed currently)
 public class pointer_script : MonoBehaviour {
 	public float topOfScreen = 3f;
 	public Transform player;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Touchable;
+
+//Manages touches and touch_objects (buttons, joysticks)
 public class touch_controller_script : MonoBehaviour {
     [SerializeField]
     touch_object[] touchableObjects;

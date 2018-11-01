@@ -14,19 +14,23 @@ enum Scenes
 }
 
 public class game_controller_script : MonoBehaviour {
+    [Header("Dev Vars")]
     [SerializeField] //for dev
     private int firstLevelToLoad;
+    [Tooltip("singleton variable")]
     public static game_controller_script GAME_CONTROLLER;
-    [SerializeField]
-    private disable_cinemachine cinemachine_script;
-    public int player1Score, player2Score;
+    int player1Score, player2Score;
     public int scoreToWin = 3; //public to be accessed in menu
     int currentScene;
     int nextSceneToLoad;
+
+    [Header("References")]
     TextMeshProUGUI player1Text, player2Text;
     [SerializeField]
     Canvas uiCanvas;
-    
+    [SerializeField]
+    //Disables cinemachine on load (start screen)
+    private disable_cinemachine cinemachine_script;
     GameObject loadingScreen;
     GameObject winScreen;
     player_move player1, player2; //replace with messaging system?
@@ -44,8 +48,8 @@ public class game_controller_script : MonoBehaviour {
             GAME_CONTROLLER.Start();
         }
     }
-    // Use this for initialization
     void Start() {
+
         uiCanvas.enabled = true;
         player1Text = GameObject.Find("Score 1").GetComponent<TextMeshProUGUI>();
         player2Text = GameObject.Find("Score 2").GetComponent<TextMeshProUGUI>();
@@ -58,7 +62,6 @@ public class game_controller_script : MonoBehaviour {
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         currentScene = (int)Scenes.START;
-        //disable cinemachine
 
         //if dev.
         currentScene = firstLevelToLoad;
@@ -69,8 +72,6 @@ public class game_controller_script : MonoBehaviour {
 
         SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
         
-
-
         //replace with messaging system
         player1 = GameObject.Find("Player1").GetComponent<player_move>();
         player2 = GameObject.Find("Player2").GetComponent<player_move>();
@@ -90,29 +91,13 @@ public class game_controller_script : MonoBehaviour {
             loadingScreen.SetActive(shouldShow);
     }
 
-    void showWinScreen(bool shouldShow, string playerNumber = "ERROR")
-    {
-        if (shouldShow)
-        {
-            winScreen.SetActive(true);
-            winScreen.GetComponentInChildren<TextMeshProUGUI>().SetText("Player " + playerNumber + " Wins!");
-        }
-        else
-        {
-            winScreen.SetActive(false);
-        }
-    }
 
     public void setHealth(float newHealth)
     {
         player1.setHealth(newHealth);
         player2.setHealth(newHealth);
     }
-
-    void playerWon(int playerNum)
-    {
-        showWinScreen(true, playerNum.ToString());
-    }
+    
     public void playerLost(int playerNum) {
         if (playerNum == 2) {
             player1Score++;
@@ -137,7 +122,22 @@ public class game_controller_script : MonoBehaviour {
             nextScene();
         }
     }
-
+    void playerWon(int playerNum)
+    {
+        showWinScreen(true, playerNum.ToString());
+    }
+    void showWinScreen(bool shouldShow, string playerNumber = "ERROR")
+    {
+        if (shouldShow)
+        {
+            winScreen.SetActive(true);
+            winScreen.GetComponentInChildren<TextMeshProUGUI>().SetText("Player " + playerNumber + " Wins!");
+        }
+        else
+        {
+            winScreen.SetActive(false);
+        }
+    }
 
     IEnumerator loadNextScene(float delay = 0f) {
         //if scene not already loaded.
@@ -148,7 +148,7 @@ public class game_controller_script : MonoBehaviour {
             AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene); 
             Debug.Log("Unloaded Scene" + currentScene);
             yield return unload; //wait for scene to be unloaded. 
-                                 //https://stackoverflow.com/questions/50502394/how-can-i-wait-for-a-scene-to-unload
+            //https://stackoverflow.com/questions/50502394/how-can-i-wait-for-a-scene-to-unload
             SceneManager.LoadScene(nextSceneToLoad, LoadSceneMode.Additive);
             if (currentScene == (int)Scenes.START || currentScene == (int)Scenes.MENU)
             {

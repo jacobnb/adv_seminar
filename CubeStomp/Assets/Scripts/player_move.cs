@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+//Controls player movement, health, and triggers animations
 public class player_move : MonoBehaviour
 {
     enum TAGS
@@ -17,16 +17,27 @@ public class player_move : MonoBehaviour
     [Header("Dev Variables")]
     [SerializeField]
     bool enableAI = false;
+    [SerializeField]
+    TAGS[] collisions = new TAGS[4];
 
     [Header("Movement")]
-    [Tooltip("This be tooltip")]
-    public int playerNum;
-    public float moveSpeed = 10;
-    public float jumpHeight = 10;
-    public float smashSpeed = 1200;
-    public float frozenTime = 0.5f;
     [SerializeField]
-    float wallJumpForce = 10;
+    float moveSpeed = 20;
+    [SerializeField]
+    float jumpHeight = 900;
+    [SerializeField]
+    float smashSpeed = 1200;
+    [SerializeField]
+    [Tooltip("How long the enemy is frozen after a successful smash")]
+    float frozenTime = 0.5f;
+    [SerializeField]
+    [Tooltip("Force away from the wall after wall jump")]
+    float wallJumpForce = 0; //erased by movement function.
+    private float moveDirection;
+    [SerializeField]
+    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped, isSmashing;
+    //used in collisions array to get location
+    enum CollisionsLoc { botColl, rightColl, leftColl, topColl };
 
     [Header("Touch Controls")]
     public touch_joystick_script joystick_script;
@@ -34,39 +45,29 @@ public class player_move : MonoBehaviour
     Touchable.touch_object upButton_script;
     [SerializeField]
     Touchable.touch_object downButton_script;
-
-
-
-    public player_move enemy_moveScript;
-    private player_anim_script anim_script;
     
-    private float moveDirection;
-    bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped;
+    [Header("References")]
     [SerializeField]
-    TAGS[] collisions = new TAGS[4];
-    //used in collisions array to get location
-    enum CollisionsLoc {botColl, rightColl, leftColl, topColl}; 
-    bool isFrozen;
-    float maxHealth = 20;
-    private game_controller_script gcs;
-    public float groundDistance = 3.02f;
-    private Rigidbody2D rb;
-    public LayerMask groundMask;
+    private player_move enemy_moveScript;
     public LayerMask playerMask;
+    private player_anim_script anim_script;
+    private game_controller_script gcs;
+    private Rigidbody2D rb;
+
+    //Reset and health vars
+    float maxHealth = 50;
     Vector2 startPosit;
     Vector3 startSize;
+    int playerNum; //set based on name
 
-    // Use this for initialization
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        Debug.Assert(rb);
         gcs = game_controller_script.GAME_CONTROLLER;
-        Debug.Assert(gcs);
         anim_script = gameObject.GetComponent<player_anim_script>();
+        Debug.Assert(rb && gcs && anim_script);
         startPosit = transform.position;
         startSize = transform.localScale;
-        // Debug.Assert(cubeSpitter);
         canJump = true;
         doubleJump = true;
         hasWallJumped = false;
@@ -80,41 +81,25 @@ public class player_move : MonoBehaviour
         }
     }
 
-    private void setAnimations()
+    void Update()
     {
-        //If touching ground do nothing
-        if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
+        checkIfCanJump();
+        setAnimations();
+
+#if UNITY_STANDALONE || UNITY_WEBPLAYER
+        getKeyInput();
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        getTouchJoystickInput();
+#endif 
+        if (enableAI)
         {
-            anim_script.setAllDusts(false, false, false);
-            return;
+            AIMovement();
         }
-        //if on top of player show dust.
-        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
-        {
-            anim_script.setAllDusts(false, false, true);
-            return;
-        }
-        //if it hasn't returned by now, nothings on the bottom
-        anim_script.bottomDust(false);
-        //left side
-        if(collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
-        {
-            anim_script.leftDust(true);
-        }
-        else
-        {
-            anim_script.leftDust(false);
-        }
-        //right side
-        if(collisions[(int)CollisionsLoc.rightColl] != TAGS.NONE)
-        {
-            anim_script.rightDust(true);
-        }
-        else
-        {
-            anim_script.rightDust(false);
-        }
+        movePlayer();
+        checkForDamage();
     }
+    
+    //Set collisions positions and flags
     private void OnCollisionEnter2D(Collision2D coll)
     {
         TAGS collTag = TAGS.NONE;
@@ -132,7 +117,7 @@ public class player_move : MonoBehaviour
             collTag = TAGS.PLAYER;
         }
         else
-        { //not a type we care about so ignore.
+        { //not a tag we care about so ignore.
             Debug.Log("GameObject does not have recognized tag");
             return;
         }
@@ -169,6 +154,8 @@ public class player_move : MonoBehaviour
         }
 
     }
+
+    //Remove collisions positions and flags
     private void OnCollisionExit2D(Collision2D coll)
     {
         TAGS collTag = TAGS.NONE;
@@ -197,14 +184,56 @@ public class player_move : MonoBehaviour
             }
         }
      }
+
+    private void setAnimations()
+    {
+        //If touching ground do nothing
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
+        {
+            anim_script.setAllDusts(false, false, false);
+            return;
+        }
+        //if on top of player show dust.
+        if (collisions[(int)CollisionsLoc.botColl] == TAGS.PLAYER)
+        {
+            anim_script.setAllDusts(false, false, true);
+            return;
+        }
+        //if it hasn't returned by now, nothing is on the bottom
+        anim_script.bottomDust(false);
+        //left side
+        if (collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
+        {
+            anim_script.leftDust(true);
+        }
+        else
+        {
+            anim_script.leftDust(false);
+        }
+        //right side
+        if (collisions[(int)CollisionsLoc.rightColl] != TAGS.NONE)
+        {
+            anim_script.rightDust(true);
+        }
+        else
+        {
+            anim_script.rightDust(false);
+        }
+    }
+
+    //Called when a new level is loaded.
     public void GameStarted()
     {
         resetPlayer();
     }
+
+    //Set player health (in menu screen)
     public void setHealth(float newHP)
     {
         maxHealth = newHP;
     }
+
+    //Reset position and health
     void resetPlayer()
     {
         rb.velocity = Vector2.zero;
@@ -217,7 +246,9 @@ public class player_move : MonoBehaviour
         gameObject.SetActive(true);
 
     }
-    void checkForGround()
+
+    //Checks through collisions to see if the player can jump
+    void checkIfCanJump()
     {
         //if touching ground or on top of enemy
         if(collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND
@@ -244,34 +275,20 @@ public class player_move : MonoBehaviour
             wallJump = false;
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        checkForGround();
-        setAnimations();
-#if UNITY_STANDALONE || UNITY_WEBPLAYER
-        getKeyInput();
-#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-        getTouchJoystickInput();
-#endif 
-        if (enableAI)
-        {
-            AIMovement();
-        }
-        movePlayer();
-        checkForDamage();
-    }
+
+    //Make the player move randomly for single player testing. This is bad AI
     void AIMovement()
     {
         moveDirection = Random.Range(-1f, 1f);
         shouldJump = Random.value < 0.1f;
         //shouldSmash = Random.value < 0.5f;
     }
-    public IEnumerator freeze(float frozenTime)
+
+    public IEnumerator smashing(float frozenTime)
     {
-        isFrozen = true;
+        isSmashing = true;
         yield return new WaitForSeconds(frozenTime);
-        isFrozen = false;
+        isSmashing = false;
     }
 
     void checkForDamage()
@@ -288,20 +305,23 @@ public class player_move : MonoBehaviour
             }
         }
     }
+
+    //Move player down until they hit the floor or opponent.
     void smash()
     {
         rb.velocity = new Vector2(0.0f, 0.0f);
         rb.AddForce(new Vector2(0f, -smashSpeed));
         //raycast down, if hit player freeze player.
-        //example StartCoroutine(Camera.main.GetComponent<myTimer>().Counter());
-        Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, gameObject.GetComponent<Collider2D>().bounds.size.y);
+        Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, 
+                                      gameObject.GetComponent<Collider2D>().bounds.size.y);
         RaycastHit2D hitPlayer = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.down, 100f, playerMask);
         if (hitPlayer.collider)
         {
-            StartCoroutine(hitPlayer.transform.GetComponent<player_move>().freeze(frozenTime));
+            StartCoroutine(hitPlayer.transform.GetComponent<player_move>().smashing(frozenTime));
         }
-        StartCoroutine("freeze", 2 * frozenTime);
+        StartCoroutine("smashing", 2 * frozenTime);
     }
+
     void getTouchJoystickInput()
     {
         Vector2 joystickLocation = joystick_script.getJoystickLoc();
@@ -332,9 +352,9 @@ public class player_move : MonoBehaviour
 
     void movePlayer()
     {
-        if (isFrozen)
+        if (isSmashing)
         {
-            rb.velocity = new Vector2(0f, rb.velocity.y);
+            rb.velocity = new Vector2(0f, -smashSpeed);
             return;
         }
 
@@ -352,13 +372,14 @@ public class player_move : MonoBehaviour
         }
     }
 
+    //If a valid jump variable is true then jump.
     void checkJump()
     {
         if (canJump)
         {
+            jump();
             canJump = false;
             wallJump = false;
-            jump();
         }
         else if (wallJump)
         {
@@ -371,6 +392,7 @@ public class player_move : MonoBehaviour
             doubleJump = false;
         }
     }
+
     void jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, 0.0f);
@@ -382,6 +404,8 @@ public class player_move : MonoBehaviour
             enemy_moveScript.jumpedOff();
         }
     }
+
+    //jump away from wall / player
     void jumpOff()
     {
         //disable multiple wall jumps
@@ -419,6 +443,8 @@ public class player_move : MonoBehaviour
             enemy_moveScript.jumpedOff();
         }
     }
+
+    //Player has been jumped off of, add downward force.
     public void jumpedOff()
     {
         rb.AddForce(new Vector2(0f, -jumpHeight));

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Touchable
 {
+    //Base class for touch control objects (button, joystick)
     public abstract class touch_object : MonoBehaviour
     {
         [SerializeField]

@@ -5,7 +5,8 @@ using Cinemachine;
 
 public class disable_cinemachine : MonoBehaviour {
     CinemachineBrain cBrain;
-	// Use this for initialization
+	
+    //Disables cinemachine for the start screen.
 	void Start () {
         cBrain = gameObject.GetComponent<CinemachineBrain>();
         Debug.Assert(cBrain);
