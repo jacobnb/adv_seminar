@@ -347,11 +347,13 @@ public class player_move : MonoBehaviour
         }
         else if (wallJump)
         {
-            jumpedOff();
+            jumpOff();
+            wallJump = false;
         }
         else if (doubleJump)
         {
             jump();
+            doubleJump = false;
         }
     }
     void jump()
