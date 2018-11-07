@@ -128,7 +128,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &6172883
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2350,7 +2350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730ea8e81395aa949a73d4328bf28c17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstLevelToLoad: 1
+  firstLevelToLoad: 5
   scoreToWin: 3
   uiCanvas: {fileID: 1684068333}
   cinemachine_script: {fileID: 1923244478}
@@ -2798,6 +2798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3aa39faba403a4b9e78e8b6273e1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stunAnim: {fileID: 1807857354643586, guid: fc46fe4f2317b564394fa9742533fa25, type: 2}
 --- !u!4 &1337790764
 Transform:
   m_ObjectHideFlags: 0
@@ -4100,7 +4101,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.22352941, g: 0.29803923, b: 0.30588236, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -4115,7 +4116,7 @@ Camera:
   far clip plane: 5000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.9599166
+  orthographic size: 12.374992
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4266,6 +4267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3aa39faba403a4b9e78e8b6273e1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stunAnim: {fileID: 1974202601355532, guid: 2d07173fbfb819b4f9d7f77532c264f3, type: 2}
 --- !u!4 &1928814963
 Transform:
   m_ObjectHideFlags: 0

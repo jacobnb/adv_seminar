@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class player_anim_script : MonoBehaviour {
+    [SerializeField]
+    GameObject stunAnim;
+    GameObject stunAnimPlaying;
     ParticleSystem rightCloud, leftCloud, bottomCloud;
 	void Start () {
         rightCloud = gameObject.transform.Find("RightDustCloud").GetComponent<ParticleSystem>();
@@ -10,7 +13,21 @@ public class player_anim_script : MonoBehaviour {
         bottomCloud = gameObject.transform.Find("BottomDustCloud").GetComponent<ParticleSystem>();
 
     }
-
+    public void disableStunAnim()
+    {
+        if (stunAnimPlaying)
+        {
+            Destroy(stunAnimPlaying);
+        }
+    }
+    public void enableStunAnim()
+    {
+        if (!stunAnimPlaying)
+        {
+            stunAnimPlaying = Instantiate(stunAnim);
+            stunAnimPlaying.GetComponent<stunAnimScript>().init(transform);
+        }
+    }
     public void setAllDusts(bool left, bool right, bool top)
     {
         leftDust(left);

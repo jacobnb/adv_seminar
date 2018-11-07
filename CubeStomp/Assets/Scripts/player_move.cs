@@ -203,6 +203,10 @@ public class player_move : MonoBehaviour
             return;
             //== THERE IS A RETURN HERE ==//
         }
+        else
+        {
+            anim_script.topDust(false);
+        }
         //left side
         if (collisions[(int)CollisionsLoc.leftColl] != TAGS.NONE)
         {
@@ -357,9 +361,10 @@ public class player_move : MonoBehaviour
         if (isSmashing)
         {
             rb.velocity = new Vector2(0f, -smashSpeed);
+            anim_script.enableStunAnim();
             return;
         }
-
+        anim_script.disableStunAnim();
         Vector2 velocity = rb.velocity;
         velocity.x = moveDirection * moveSpeed;
         rb.velocity = velocity;
