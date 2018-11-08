@@ -242,6 +242,7 @@ public class player_move : MonoBehaviour
     //Reset position and health
     void resetPlayer()
     {
+        Debug.Log("Resetting Player " + playerNum);
         rb.velocity = Vector2.zero;
         transform.position = startPosit;
         transform.localScale = startSize;
