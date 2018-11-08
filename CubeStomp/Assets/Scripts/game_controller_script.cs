@@ -216,4 +216,8 @@ public class game_controller_script : MonoBehaviour {
         showWinScreen(false);
     }
 
+    public void quitGame()
+    {
+        Application.Quit();
+    }
 }

@@ -13,5 +13,9 @@ public class buttons_script : MonoBehaviour {
         game_controller_script.GAME_CONTROLLER.loadMenu();
     }
 
+    public void quitGame()
+    {
+        Application.Quit(); 
+    }
 
 }
