@@ -240,6 +240,7 @@ public class player_move : MonoBehaviour
     }
 
     //Reset position and health
+    /*If this isn't working, make sure that in game scene the UI canvas element is unchecked and everything else under it is enabled*/
     void resetPlayer()
     {
         Debug.Log("Resetting Player " + playerNum);
