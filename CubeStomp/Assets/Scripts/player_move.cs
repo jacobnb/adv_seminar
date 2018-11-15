@@ -34,7 +34,6 @@ public class player_move : MonoBehaviour
     [Tooltip("Force away from the wall after wall jump")]
     float wallJumpForce = 0; //erased by movement function.
     private float moveDirection;
-    [SerializeField]
     bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped, isSmashing;
     //used in collisions array to get location
     enum CollisionsLoc { botColl, rightColl, leftColl, topColl };
@@ -331,13 +330,13 @@ public class player_move : MonoBehaviour
         rb.velocity = new Vector2(0.0f, 0.0f);
         rb.AddForce(new Vector2(0f, -smashSpeed));
         //raycast down, if hit player freeze player.
-        Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, 
-                                      gameObject.GetComponent<Collider2D>().bounds.size.y);
-        RaycastHit2D hitPlayer = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.down, 100f, playerMask);
-        if (hitPlayer.collider)
-        {
-            StartCoroutine(hitPlayer.transform.GetComponent<player_move>().smashing(frozenTime));
-        }
+        //Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, 
+        //                              gameObject.GetComponent<Collider2D>().bounds.size.y);
+        //RaycastHit2D hitPlayer = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.down, 100f, playerMask);
+        //if (hitPlayer.collider)
+        //{
+        //    StartCoroutine(hitPlayer.transform.GetComponent<player_move>().smashing(frozenTime));
+        //}
         StartCoroutine("smashing", 2 * frozenTime);
     }
 
