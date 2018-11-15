@@ -40,7 +40,9 @@ public class player_move : MonoBehaviour
     enum CollisionsLoc { botColl, rightColl, leftColl, topColl };
     float dashLeftTime = 0f;
     float dashRightTime = 0f;
-    float dashKeypressTime = 1f;
+    [SerializeField]
+    [Tooltip("How much time can be in between key presses for dash")]
+    float dashKeypressTime = 0.4f;
     [SerializeField]
     float dashSpeed = 5000f;
     [SerializeField]
@@ -380,48 +382,51 @@ public class player_move : MonoBehaviour
         dashLeftTime -= Time.deltaTime;
         dashRightTime -= Time.deltaTime;
 
-        if(dashLeftTime > 0)
+        //== Check Dash Right
+        if(playerNum == 1)
         {
-            if(playerNum == 1)
-            {
-                shouldDash = Input.GetKeyDown("left") || Input.GetKeyDown("j");
-            }
-            if(playerNum == 2)
-            {
-                shouldDash = Input.GetKeyDown("a");
-            }
-            if (shouldDash)
+            shouldDash = Input.GetKeyDown("left") || Input.GetKeyDown("j");
+        }
+        if(playerNum == 2)
+        {
+            shouldDash = Input.GetKeyDown("a");
+        }
+        if (shouldDash)
+        {
+            if (dashLeftTime > 0)
             {
                 dashLeft();
             }
+            else
+            {
+                dashLeftTime = dashKeypressTime;
+                dashRightTime = 0;
+            }
+
         }
-        if(dashRightTime > 0)
+
+        //== Check Dash Left
+        shouldDash = false;
+        if (playerNum == 1)
         {
-            if (playerNum == 1)
-            {
-                shouldDash = Input.GetKeyDown("right") || Input.GetKeyDown("l");
-            }
-            if (playerNum == 2)
-            {
-                shouldDash = Input.GetKeyDown("d");
-            }
-            if (shouldDash)
+            shouldDash = Input.GetKeyDown("right") || Input.GetKeyDown("l");
+        }
+        if (playerNum == 2)
+        {
+            shouldDash = Input.GetKeyDown("d");
+        }
+        if (shouldDash)
+        {
+            if (dashRightTime > 0)
             {
                 dashRight();
             }
+            else
+            {
+                dashRightTime = dashKeypressTime;
+                dashLeftTime = 0;
+            }
         }
-
-        if(moveDirection > 0)
-        {
-            dashRightTime = dashKeypressTime;
-            dashLeftTime = 0;
-        }
-        else if (moveDirection < 0)
-        {
-            dashLeftTime = dashKeypressTime;
-            dashRightTime = 0;
-        }
-        
     }
     void dashRight()
     {

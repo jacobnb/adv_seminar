@@ -2844,6 +2844,7 @@ MonoBehaviour:
   wallJump: 0
   hasWallJumped: 0
   isSmashing: 0
+  dashKeypressTime: 0.4
   dashSpeed: 5000
   dashCD: 2
   joystick_script: {fileID: 1731859334}
@@ -3894,8 +3895,9 @@ MonoBehaviour:
   wallJump: 0
   hasWallJumped: 0
   isSmashing: 0
+  dashKeypressTime: 0.4
   dashSpeed: 5000
-  dashCD: 3
+  dashCD: 2
   joystick_script: {fileID: 436433929}
   upButton_script: {fileID: 564169203}
   downButton_script: {fileID: 1248493527}
