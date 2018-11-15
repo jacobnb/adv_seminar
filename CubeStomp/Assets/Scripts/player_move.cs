@@ -38,7 +38,14 @@ public class player_move : MonoBehaviour
     bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped, isSmashing;
     //used in collisions array to get location
     enum CollisionsLoc { botColl, rightColl, leftColl, topColl };
-    int prevMoveDirection; //records move direction from a short time ago, used in dash.
+    float dashLeftTime = 0f;
+    float dashRightTime = 0f;
+    float dashKeypressTime = 1f;
+    [SerializeField]
+    float dashSpeed = 5000f;
+    [SerializeField]
+    float dashCD = 3f;
+    float dashCDTimer;
 
     [Header("Touch Controls")]
     public touch_joystick_script joystick_script;
@@ -345,8 +352,8 @@ public class player_move : MonoBehaviour
         if (playerNum == 1)
         {
             moveDirection = Input.GetAxis("Horizontal");
-            shouldJump = Input.GetKeyDown("up") | Input.GetKeyDown("o");
-            shouldSmash = Input.GetKeyDown("down") | Input.GetKeyDown("l");
+            shouldJump = Input.GetKeyDown("up") | Input.GetKeyDown("i");
+            shouldSmash = Input.GetKeyDown("down") | Input.GetKeyDown("k");
         }
         else if (playerNum == 2)
         {
@@ -359,33 +366,72 @@ public class player_move : MonoBehaviour
             Debug.Log("Invalid player num");
         }
     }
+
     private void checkAndDash()
     {
-        bool wasMovingRecently = false;
-        if (moveDirection > 0)
+        if(dashCDTimer > 0)
         {
-            prevMoveDirection = 1;
+            dashCDTimer -= Time.deltaTime;
+            dashLeftTime = 0;
+            dashRightTime = 0;
+            return;
+        }
+        bool shouldDash = false;
+        dashLeftTime -= Time.deltaTime;
+        dashRightTime -= Time.deltaTime;
+
+        if(dashLeftTime > 0)
+        {
+            if(playerNum == 1)
+            {
+                shouldDash = Input.GetKeyDown("left") || Input.GetKeyDown("j");
+            }
+            if(playerNum == 2)
+            {
+                shouldDash = Input.GetKeyDown("a");
+            }
+            if (shouldDash)
+            {
+                dashLeft();
+            }
+        }
+        if(dashRightTime > 0)
+        {
+            if (playerNum == 1)
+            {
+                shouldDash = Input.GetKeyDown("right") || Input.GetKeyDown("l");
+            }
+            if (playerNum == 2)
+            {
+                shouldDash = Input.GetKeyDown("d");
+            }
+            if (shouldDash)
+            {
+                dashRight();
+            }
+        }
+
+        if(moveDirection > 0)
+        {
+            dashRightTime = dashKeypressTime;
+            dashLeftTime = 0;
         }
         else if (moveDirection < 0)
         {
-            prevMoveDirection = -1;
+            dashLeftTime = dashKeypressTime;
+            dashRightTime = 0;
         }
-        else if (moveDirection == 0 && prevMoveDirection != 0)
-        {
-            wasMovingRecently = true;
-        }
-
-        if(wasMovingRecently && moveDirection != 0)
-        {
-            if(Mathf.Sign(moveDirection) == Mathf.Sign(prevMoveDirection))
-            {
-                //do dash
-            }
-            else
-            {
-                //clear dash.
-            }
-        }
+        
+    }
+    void dashRight()
+    {
+        dashCDTimer = dashCD;
+        rb.AddForce(new Vector2(dashSpeed, 0f));
+    }
+    void dashLeft()
+    {
+        dashCDTimer = dashCD;
+        rb.AddForce(new Vector2(-dashSpeed, 0f));
     }
     void movePlayer()
     {
