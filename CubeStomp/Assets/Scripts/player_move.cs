@@ -38,6 +38,7 @@ public class player_move : MonoBehaviour
     bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped, isSmashing;
     //used in collisions array to get location
     enum CollisionsLoc { botColl, rightColl, leftColl, topColl };
+    int prevMoveDirection; //records move direction from a short time ago, used in dash.
 
     [Header("Touch Controls")]
     public touch_joystick_script joystick_script;
@@ -96,6 +97,7 @@ public class player_move : MonoBehaviour
             AIMovement();
         }
         movePlayer();
+        checkAndDash();
         checkForDamage();
     }
     
@@ -185,7 +187,7 @@ public class player_move : MonoBehaviour
             }
         }
      }
-
+    
     private void setAnimations()
     {
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
@@ -357,7 +359,34 @@ public class player_move : MonoBehaviour
             Debug.Log("Invalid player num");
         }
     }
+    private void checkAndDash()
+    {
+        bool wasMovingRecently = false;
+        if (moveDirection > 0)
+        {
+            prevMoveDirection = 1;
+        }
+        else if (moveDirection < 0)
+        {
+            prevMoveDirection = -1;
+        }
+        else if (moveDirection == 0 && prevMoveDirection != 0)
+        {
+            wasMovingRecently = true;
+        }
 
+        if(wasMovingRecently && moveDirection != 0)
+        {
+            if(Mathf.Sign(moveDirection) == Mathf.Sign(prevMoveDirection))
+            {
+                //do dash
+            }
+            else
+            {
+                //clear dash.
+            }
+        }
+    }
     void movePlayer()
     {
         if (isSmashing)
