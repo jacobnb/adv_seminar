@@ -28,7 +28,7 @@ public class player_move : MonoBehaviour
     [SerializeField]
     float smashSpeed = 1200;
     [SerializeField]
-    [Tooltip("How long the enemy is frozen after a successful smash")]
+    [Tooltip("How long the player is frozen after a successful smash")]
     float frozenTime = 0.5f;
     [SerializeField]
     [Tooltip("Force away from the wall after wall jump")]
@@ -105,7 +105,6 @@ public class player_move : MonoBehaviour
             AIMovement();
         }
         movePlayer();
-        checkAndDash();
         checkForDamage();
     }
     
@@ -329,6 +328,7 @@ public class player_move : MonoBehaviour
     {
         rb.velocity = new Vector2(0.0f, 0.0f);
         rb.AddForce(new Vector2(0f, -smashSpeed));
+        //Code to stun the player below on smash.
         //raycast down, if hit player freeze player.
         //Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, 
         //                              gameObject.GetComponent<Collider2D>().bounds.size.y);
@@ -337,7 +337,7 @@ public class player_move : MonoBehaviour
         //{
         //    StartCoroutine(hitPlayer.transform.GetComponent<player_move>().smashing(frozenTime));
         //}
-        StartCoroutine("smashing", 2 * frozenTime);
+        StartCoroutine("smashing", frozenTime);
     }
 
     void getTouchJoystickInput()
@@ -445,6 +445,7 @@ public class player_move : MonoBehaviour
             anim_script.enableStunAnim();
             return;
         }
+        checkAndDash();
         anim_script.disableStunAnim();
         Vector2 velocity = rb.velocity;
         velocity.x = moveDirection * moveSpeed;
