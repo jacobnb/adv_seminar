@@ -535,6 +535,7 @@ GameObject:
   - component: {fileID: 974323168}
   - component: {fileID: 974323167}
   - component: {fileID: 974323166}
+  - component: {fileID: 974323169}
   m_Layer: 0
   m_Name: Quit
   m_TagString: Untagged
@@ -646,6 +647,35 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 974323164}
   m_CullTransparentMesh: 0
+--- !u!114 &974323169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 974323164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4891c186d04dcd649a8283ef589e73d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  funcToCall:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1127005428}
+        m_MethodName: quitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  keysToCheck:
+  - escape
 --- !u!1 &1074897935
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +687,7 @@ GameObject:
   - component: {fileID: 1074897939}
   - component: {fileID: 1074897938}
   - component: {fileID: 1074897937}
+  - component: {fileID: 1074897940}
   m_Layer: 0
   m_Name: StartButton
   m_TagString: Untagged
@@ -768,6 +799,36 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1074897935}
   m_CullTransparentMesh: 0
+--- !u!114 &1074897940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1074897935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4891c186d04dcd649a8283ef589e73d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  funcToCall:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1127005428}
+        m_MethodName: startGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  keysToCheck:
+  - return
+  - space
 --- !u!1 &1127005424
 GameObject:
   m_ObjectHideFlags: 0

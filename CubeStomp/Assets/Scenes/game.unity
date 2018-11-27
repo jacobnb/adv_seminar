@@ -1511,6 +1511,7 @@ GameObject:
   - component: {fileID: 500491000}
   - component: {fileID: 500490999}
   - component: {fileID: 500490998}
+  - component: {fileID: 500491001}
   m_Layer: 0
   m_Name: Continue
   m_TagString: Untagged
@@ -1622,6 +1623,36 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 500490996}
   m_CullTransparentMesh: 0
+--- !u!114 &500491001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 500490996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4891c186d04dcd649a8283ef589e73d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  funcToCall:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1058292649}
+        m_MethodName: continueGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  keysToCheck:
+  - return
+  - space
 --- !u!1 &564169202
 GameObject:
   m_ObjectHideFlags: 0
@@ -2837,13 +2868,6 @@ MonoBehaviour:
   smashSpeed: 100
   frozenTime: 0.25
   wallJumpForce: 10
-  shouldJump: 0
-  canJump: 0
-  doubleJump: 0
-  shouldSmash: 0
-  wallJump: 0
-  hasWallJumped: 0
-  isSmashing: 0
   dashKeypressTime: 0.4
   dashSpeed: 5000
   dashCD: 2
@@ -3537,6 +3561,7 @@ GameObject:
   - component: {fileID: 1851491512}
   - component: {fileID: 1851491511}
   - component: {fileID: 1851491510}
+  - component: {fileID: 1851491513}
   m_Layer: 0
   m_Name: Play Again
   m_TagString: Untagged
@@ -3648,6 +3673,36 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1851491508}
   m_CullTransparentMesh: 0
+--- !u!114 &1851491513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1851491508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4891c186d04dcd649a8283ef589e73d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  funcToCall:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1058292649}
+        m_MethodName: startGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  keysToCheck:
+  - return
+  - space
 --- !u!1 &1908074249
 GameObject:
   m_ObjectHideFlags: 0
@@ -3888,13 +3943,6 @@ MonoBehaviour:
   smashSpeed: 100
   frozenTime: 0.25
   wallJumpForce: 0
-  shouldJump: 0
-  canJump: 0
-  doubleJump: 0
-  shouldSmash: 0
-  wallJump: 0
-  hasWallJumped: 0
-  isSmashing: 0
   dashKeypressTime: 0.4
   dashSpeed: 5000
   dashCD: 2
@@ -4150,6 +4198,7 @@ GameObject:
   - component: {fileID: 2119130565}
   - component: {fileID: 2119130564}
   - component: {fileID: 2119130563}
+  - component: {fileID: 2119130566}
   m_Layer: 5
   m_Name: Quit
   m_TagString: Untagged
@@ -4261,3 +4310,32 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2119130561}
   m_CullTransparentMesh: 0
+--- !u!114 &2119130566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2119130561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4891c186d04dcd649a8283ef589e73d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  funcToCall:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1058292649}
+        m_MethodName: quitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  keysToCheck:
+  - escape
