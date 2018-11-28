@@ -320,6 +320,7 @@ public class player_move : MonoBehaviour
                 gcs.playerLost(playerNum);
                 gameObject.SetActive(false);
             }
+            //==Add screenshot code here==//
         }
     }
 

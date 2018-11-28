@@ -34,6 +34,7 @@ public class game_controller_script : MonoBehaviour {
     GameObject loadingScreen;
     GameObject winScreen;
     player_move player1, player2; //replace with messaging system?
+    Texture2D player1Winning, player2Winning;
 
     void Awake() {
         if (!GAME_CONTROLLER) {
@@ -124,6 +125,7 @@ public class game_controller_script : MonoBehaviour {
     }
     void playerWon(int playerNum)
     {
+        setWinScreen(playerNum);
         showWinScreen(true, playerNum.ToString());
     }
     void showWinScreen(bool shouldShow, string playerNumber = "ERROR")
@@ -136,6 +138,36 @@ public class game_controller_script : MonoBehaviour {
         else
         {
             winScreen.SetActive(false);
+        }
+    }
+
+    void setWinScreen(int playerNum)
+    {
+        Sprite sprite = null;
+        if(playerNum == 1)
+        {
+            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
+            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            sprite = Sprite.Create(player1Winning, rect, pivot);
+        }
+        else if (playerNum == 2)
+        {
+            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
+            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            sprite = Sprite.Create(player1Winning, rect, pivot);
+        }
+        winScreen.GetComponent<Image>().sprite = sprite;
+    }
+
+    public void captureScreen(int playerNum)
+    {
+        if(playerNum == 1)
+        {
+            player1Winning = ScreenCapture.CaptureScreenshotAsTexture();
+        }
+        else if(playerNum == 2)
+        {
+            player2Winning = ScreenCapture.CaptureScreenshotAsTexture();
         }
     }
 
