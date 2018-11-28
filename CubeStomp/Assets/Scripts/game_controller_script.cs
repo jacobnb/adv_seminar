@@ -102,9 +102,11 @@ public class game_controller_script : MonoBehaviour {
     public void playerLost(int playerNum) {
         if (playerNum == 2) {
             player1Score++;
+            setLoadingScreen(1);
         }
         else if (playerNum == 1) {
             player2Score++;
+            setLoadingScreen(2);
         }
         else {
             Debug.LogError("Unknown Player Number");
@@ -147,7 +149,7 @@ public class game_controller_script : MonoBehaviour {
         if(playerNum == 1)
         {
             var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
-            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            var pivot = Vector2.zero;//new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
             sprite = Sprite.Create(player1Winning, rect, pivot);
         }
         else if (playerNum == 2)
@@ -159,6 +161,23 @@ public class game_controller_script : MonoBehaviour {
         winScreen.GetComponent<Image>().sprite = sprite;
     }
 
+    void setLoadingScreen(int playerNum)
+    {
+        Sprite sprite = null;
+        if (playerNum == 1)
+        {
+            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
+            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            sprite = Sprite.Create(player1Winning, rect, pivot);
+        }
+        else if (playerNum == 2)
+        {
+            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
+            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            sprite = Sprite.Create(player1Winning, rect, pivot);
+        }
+        loadingScreen.GetComponent<Image>().sprite = sprite;
+    }
     public void captureScreen(int playerNum)
     {
         if(playerNum == 1)
@@ -178,7 +197,6 @@ public class game_controller_script : MonoBehaviour {
             yield return new WaitForSeconds(delay);
             showLoadingScreen(true);
             AsyncOperation unload = SceneManager.UnloadSceneAsync(currentScene); 
-            Debug.Log("Unloaded Scene" + currentScene);
             yield return unload; //wait for scene to be unloaded. 
             //https://stackoverflow.com/questions/50502394/how-can-i-wait-for-a-scene-to-unload
             SceneManager.LoadScene(nextSceneToLoad, LoadSceneMode.Additive);
@@ -223,7 +241,6 @@ public class game_controller_script : MonoBehaviour {
         nextSceneToLoad = nextSceneToLoad % (SceneManager.sceneCountInBuildSettings - (int) Scenes.LEVEL_ONE);
         nextSceneToLoad += (int)Scenes.LEVEL_ONE;
 
-        Debug.Log(nextSceneToLoad);
         StartCoroutine(loadNextScene());
     }
 

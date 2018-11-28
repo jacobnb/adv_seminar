@@ -252,7 +252,6 @@ public class player_move : MonoBehaviour
     /*If this isn't working, make sure that in game scene the UI canvas element is unchecked and everything else under it is enabled*/
     void resetPlayer()
     {
-        Debug.Log("Resetting Player " + playerNum);
         rb.velocity = Vector2.zero;
         transform.position = startPosit;
         transform.localScale = startSize;
@@ -321,6 +320,11 @@ public class player_move : MonoBehaviour
                 gameObject.SetActive(false);
             }
             //==Add screenshot code here==//
+            if(transform.localScale.y < 0.2 && transform.localScale.y > (0.2 - 0.5 / maxHealth))
+            {
+                gcs.captureScreen(playerNum);
+                Debug.Log("Capturing Screen");
+            }
         }
     }
 
