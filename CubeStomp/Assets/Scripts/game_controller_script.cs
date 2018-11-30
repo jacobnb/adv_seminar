@@ -35,6 +35,7 @@ public class game_controller_script : MonoBehaviour {
     GameObject winScreen;
     player_move player1, player2; //replace with messaging system?
     Texture2D player1Winning, player2Winning;
+    PolygonCollider2D cameraBounds;
 
     void Awake() {
         if (!GAME_CONTROLLER) {
@@ -56,18 +57,18 @@ public class game_controller_script : MonoBehaviour {
         player2Text = GameObject.Find("Score 2").GetComponent<TextMeshProUGUI>();
         loadingScreen = GameObject.Find("Loading Screen");
         winScreen = GameObject.Find("Win Screen");
-        Debug.Assert(player1Text && player2Text);
+        cameraBounds = GameObject.Find("CameraBounds").GetComponent<PolygonCollider2D>();
+        Debug.Assert(player1Text && player2Text && cameraBounds);
         updateScore();
         showUI(false); 
         showLoadingScreen(false);
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         currentScene = (int)Scenes.START;
-
         //if dev.
-        currentScene = firstLevelToLoad;
-        showUI(true);
-        //cinemachine_script.enableCinemachine(true);
+        //currentScene = firstLevelToLoad;
+        //showUI(true);
+        ////cinemachine_script.enableCinemachine(true);
 
         //end if dev
 
@@ -111,6 +112,7 @@ public class game_controller_script : MonoBehaviour {
         else {
             Debug.LogError("Unknown Player Number");
         }
+        updateScore();
         if (player1Score >= scoreToWin)
         {
             playerWon(1);
@@ -121,7 +123,6 @@ public class game_controller_script : MonoBehaviour {
         }
         else
         {
-            updateScore();
             nextScene();
         }
     }
@@ -142,52 +143,77 @@ public class game_controller_script : MonoBehaviour {
             winScreen.SetActive(false);
         }
     }
-
-    void setWinScreen(int playerNum)
+    void updateCameraBounds()
+    {
+        if (camera_bounds_script.BOUNDS_SCRIPT)
+        {
+            var points = camera_bounds_script.BOUNDS_SCRIPT.getBoundsPoints();
+            if (points != null)
+            {
+                cameraBounds.points = points;
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed Camera Update");
+        }
+    }
+    void setWinScreen(int winPlayer)
     {
         Sprite sprite = null;
-        if(playerNum == 1)
+        if(winPlayer == 1)
         {
             var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
             var pivot = Vector2.zero;//new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
             sprite = Sprite.Create(player1Winning, rect, pivot);
         }
-        else if (playerNum == 2)
+        else if (winPlayer == 2)
         {
-            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
-            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
-            sprite = Sprite.Create(player1Winning, rect, pivot);
+            var rect = new Rect(0, 0, player2Winning.width, player2Winning.height);
+            var pivot = new Vector2(player2Winning.width / 2.0f, player2Winning.height / 2.0f);
+            sprite = Sprite.Create(player2Winning, rect, pivot);
         }
         winScreen.GetComponent<Image>().sprite = sprite;
     }
 
-    void setLoadingScreen(int playerNum)
+    void setLoadingScreen(int winPlayer)
     {
         Sprite sprite = null;
-        if (playerNum == 1)
+        if (winPlayer == 1)
         {
-            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
-            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
+            var posit = new Vector2(0, 0);
+            var size = new Vector2(player1Winning.width, player1Winning.height); //935x526
+            var rect = new Rect(posit, size);
+            //pixel size problems?
+            var pivot = Vector2.zero;//new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
             sprite = Sprite.Create(player1Winning, rect, pivot);
         }
-        else if (playerNum == 2)
+        else if (winPlayer == 2)
         {
-            var rect = new Rect(0, 0, player1Winning.width, player1Winning.height);
-            var pivot = new Vector2(player1Winning.width / 2.0f, player1Winning.height / 2.0f);
-            sprite = Sprite.Create(player1Winning, rect, pivot);
+            var rect = new Rect(0, 0, player2Winning.width, player2Winning.height);
+            var pivot = Vector2.zero;//new Vector2(player2Winning.width / 2.0f, player2Winning.height / 2.0f);
+            sprite = Sprite.Create(player2Winning, rect, pivot);
         }
         loadingScreen.GetComponent<Image>().sprite = sprite;
     }
-    public void captureScreen(int playerNum)
+    public void captureScreen(int losingPlayer)
     {
-        if(playerNum == 1)
-        {
-            player1Winning = ScreenCapture.CaptureScreenshotAsTexture();
-        }
-        else if(playerNum == 2)
+        StartCoroutine(getTexture(losingPlayer));
+    }
+    IEnumerator getTexture(int losingPlayer)
+    {
+        yield return null;
+        showUI(false);
+        yield return new WaitForEndOfFrame();
+        if (losingPlayer == 1)
         {
             player2Winning = ScreenCapture.CaptureScreenshotAsTexture();
         }
+        else if (losingPlayer == 2)
+        {
+            player1Winning = ScreenCapture.CaptureScreenshotAsTexture();
+        }
+        showUI(true);
     }
 
     IEnumerator loadNextScene(float delay = 0f) {
@@ -210,11 +236,13 @@ public class game_controller_script : MonoBehaviour {
             }
             else
             {
+                yield return new WaitForSeconds(0.1f);
+                updateCameraBounds();
                 cinemachine_script.enableCinemachine(true);
             }
             currentScene = nextSceneToLoad;
         }
-        else// if (currentScene != (int)Scenes.START || currentScene != (int)Scenes.MENU)
+        else
         {
             showLoadingScreen(true);
         }
