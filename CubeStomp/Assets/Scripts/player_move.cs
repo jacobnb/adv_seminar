@@ -194,7 +194,7 @@ public class player_move : MonoBehaviour
             }
         }
      }
-    
+
     private void setAnimations()
     {
         if (collisions[(int)CollisionsLoc.botColl] == TAGS.GROUND)
@@ -243,9 +243,11 @@ public class player_move : MonoBehaviour
     }
 
     //Set player health (in menu screen)
-    public void setHealth(float newHP)
+    public float setHealth(float newHP)
     {
+        var temp = maxHealth;
         maxHealth = newHP;
+        return temp;
     }
 
     //Reset position and health
@@ -314,16 +316,16 @@ public class player_move : MonoBehaviour
         {
             //Start damage anim StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
+            //==Add screenshot code here==//
+            if (transform.localScale.y < 0.2 && transform.localScale.y > (0.2 - 0.5 / maxHealth))
+            {
+                gcs.captureScreen(playerNum);
+                Debug.Log("Capturing Screen");
+            }
             if (transform.localScale.y < 0.01)
             {
                 gcs.playerLost(playerNum);
                 gameObject.SetActive(false);
-            }
-            //==Add screenshot code here==//
-            if(transform.localScale.y < 0.2 && transform.localScale.y > (0.2 - 0.5 / maxHealth))
-            {
-                gcs.captureScreen(playerNum);
-                Debug.Log("Capturing Screen");
             }
         }
     }
