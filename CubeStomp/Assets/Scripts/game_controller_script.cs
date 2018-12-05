@@ -17,12 +17,6 @@ public class game_controller_script : MonoBehaviour {
     [Header("Dev Vars")]
     [SerializeField] //for dev
     private int firstLevelToLoad;
-    [SerializeField]
-    private float timeToSuddenDeath = 30;
-    [SerializeField]
-    private float suddenDeathTimer;
-    private float prevPlayerHP; //to reset after sudden death.
-    private bool inSuddenDeath = false;
     [Tooltip("singleton variable")]
     public static game_controller_script GAME_CONTROLLER;
     int player1Score, player2Score;
@@ -71,7 +65,6 @@ public class game_controller_script : MonoBehaviour {
         showWinScreen(false);
         nextSceneToLoad = (int)Scenes.LEVEL_ONE;
         currentScene = (int)Scenes.START;
-        suddenDeathTimer = timeToSuddenDeath;
         //if dev.
         //currentScene = firstLevelToLoad;
         //showUI(true);
@@ -85,27 +78,6 @@ public class game_controller_script : MonoBehaviour {
         player1 = GameObject.Find("Player1").GetComponent<player_move>();
         player2 = GameObject.Find("Player2").GetComponent<player_move>();
     }
-
-    private void Update()
-    {
-        checkForSuddenDeath();
-    }
-    private void checkForSuddenDeath()
-    {
-        suddenDeathTimer -= Time.deltaTime;
-        if(suddenDeathTimer <= 0 && !inSuddenDeath)
-        {
-            suddenDeath();
-        }
-    }
-    private void suddenDeath()
-    {
-        inSuddenDeath = true;
-        setHealth(1f); //caches health in prevPlayerHP
-        player1.GameStarted();
-        player2.GameStarted();
-    }
-
     void updateScore() {
         player1Text.SetText(player1Score.ToString());
         player2Text.SetText(player2Score.ToString());
@@ -124,7 +96,7 @@ public class game_controller_script : MonoBehaviour {
 
     public void setHealth(float newHealth)
     {
-        prevPlayerHP = player1.setHealth(newHealth);
+        player1.setHealth(newHealth);
         player2.setHealth(newHealth);
     }
     
@@ -286,12 +258,6 @@ public class game_controller_script : MonoBehaviour {
 
     void levelLoaded()
     {
-        suddenDeathTimer = timeToSuddenDeath;
-        if (inSuddenDeath)
-        {
-            setHealth(prevPlayerHP);
-            inSuddenDeath = false;
-        }
         player1.GameStarted();
         player2.GameStarted();
         showLoadingScreen(false);
