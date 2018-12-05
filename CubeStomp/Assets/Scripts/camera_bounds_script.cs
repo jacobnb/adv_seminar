@@ -12,13 +12,14 @@ public class camera_bounds_script : MonoBehaviour {
     public static camera_bounds_script BOUNDS_SCRIPT;
     private void Awake()
     {
-        Debug.Log("Setting Bounds Script");
         BOUNDS_SCRIPT = this;
         bounds = GetComponent<PolygonCollider2D>();
     }
 
     public Vector2[] getBoundsPoints()
     {
+        Debug.Log("Setting Bounds Script");
+
         if (bounds)
         {
             return bounds.points;
