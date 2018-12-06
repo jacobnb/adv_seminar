@@ -31,6 +31,9 @@ public class player_move : MonoBehaviour
     [Tooltip("How long the player is frozen after a successful smash")]
     float frozenTime = 0.5f;
     [SerializeField]
+    [Tooltip("Maximum fall speed during wall slide.")]
+    float wallSlideSpeed = 0.5f;
+    [SerializeField]
     [Tooltip("Force away from the wall after wall jump")]
     float wallJumpForce = 0; //erased by movement function.
     private float moveDirection;
@@ -93,6 +96,7 @@ public class player_move : MonoBehaviour
     void Update()
     {
         checkIfCanJump();
+        wallSlide();
         setAnimations();
 
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
@@ -372,7 +376,28 @@ public class player_move : MonoBehaviour
             Debug.Log("Invalid player num");
         }
     }
+    private void wallSlide()
+    {
+        if (wallJump)
+        {
+            bool shouldWallSlide = 
+                collisions[(int)CollisionsLoc.leftColl] == TAGS.WALL
+                && moveDirection < -0.5;
 
+            shouldWallSlide = shouldWallSlide 
+                ||collisions[(int)CollisionsLoc.rightColl] == TAGS.WALL
+                && moveDirection > 0.5;
+            if(shouldWallSlide)
+            {
+                var vel = rb.velocity;
+                if(vel.y < wallSlideSpeed)
+                {
+                    vel.y = wallSlideSpeed;
+                    rb.velocity = vel;
+                }
+            }
+        }
+    }
     private void checkAndDash()
     {
         if(dashCDTimer > 0)

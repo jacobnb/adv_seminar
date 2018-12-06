@@ -2920,6 +2920,7 @@ MonoBehaviour:
   jumpHeight: 900
   smashSpeed: 100
   frozenTime: 0.25
+  wallSlideSpeed: -2
   wallJumpForce: 10
   dashKeypressTime: 0.4
   dashSpeed: 5000
@@ -4050,6 +4051,7 @@ MonoBehaviour:
   jumpHeight: 900
   smashSpeed: 100
   frozenTime: 0.25
+  wallSlideSpeed: -2
   wallJumpForce: 0
   dashKeypressTime: 0.4
   dashSpeed: 5000
