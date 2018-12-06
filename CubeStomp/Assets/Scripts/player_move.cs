@@ -36,6 +36,7 @@ public class player_move : MonoBehaviour
     [SerializeField]
     [Tooltip("Force away from the wall after wall jump")]
     float wallJumpForce = 0; //erased by movement function.
+    private bool isWallSliding;
     private float moveDirection;
     bool shouldJump, canJump, doubleJump, shouldSmash, wallJump, hasWallJumped, isSmashing;
     //used in collisions array to get location
@@ -380,14 +381,14 @@ public class player_move : MonoBehaviour
     {
         if (wallJump)
         {
-            bool shouldWallSlide = 
+            isWallSliding = 
                 collisions[(int)CollisionsLoc.leftColl] == TAGS.WALL
                 && moveDirection < -0.5;
 
-            shouldWallSlide = shouldWallSlide 
+            isWallSliding = isWallSliding 
                 ||collisions[(int)CollisionsLoc.rightColl] == TAGS.WALL
                 && moveDirection > 0.5;
-            if(shouldWallSlide)
+            if(isWallSliding)
             {
                 var vel = rb.velocity;
                 if(vel.y < wallSlideSpeed)
@@ -500,7 +501,7 @@ public class player_move : MonoBehaviour
             canJump = false;
             wallJump = false;
         }
-        else if (wallJump)
+        else if (wallJump && isWallSliding)
         {
             jumpOff();
             wallJump = false;
