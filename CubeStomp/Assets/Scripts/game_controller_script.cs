@@ -49,7 +49,6 @@ public class game_controller_script : MonoBehaviour {
             player2Score = 0;
             GAME_CONTROLLER = this;
             DontDestroyOnLoad(gameObject);
-
         }
         else if (GAME_CONTROLLER != this) {
             Destroy(gameObject);
@@ -99,6 +98,12 @@ public class game_controller_script : MonoBehaviour {
         }
     }
     private void suddenDeath()
+    {
+        inSuddenDeath = true;
+        player1.suddenDeathDrain();
+        player2.suddenDeathDrain();
+    }
+    private void TRUEsuddenDeath() //sudden death implementation that sets player health to 1.
     {
         inSuddenDeath = true;
         setHealth(1f); //caches health in prevPlayerHP
@@ -207,8 +212,14 @@ public class game_controller_script : MonoBehaviour {
     void setLoadingScreen(int winPlayer)
     {
         Sprite sprite = null;
+        
         if (winPlayer == 1)
         {
+            if (!player1Winning)
+            {
+                //set a default picture here.
+                return;
+            }
             var posit = new Vector2(0, 0);
             var size = new Vector2(player1Winning.width, player1Winning.height); //935x526
             var rect = new Rect(posit, size);
@@ -218,6 +229,11 @@ public class game_controller_script : MonoBehaviour {
         }
         else if (winPlayer == 2)
         {
+            if (!player2Winning)
+            {
+                //set a default picture here.
+                return;
+            }
             var rect = new Rect(0, 0, player2Winning.width, player2Winning.height);
             var pivot = Vector2.zero;//new Vector2(player2Winning.width / 2.0f, player2Winning.height / 2.0f);
             sprite = Sprite.Create(player2Winning, rect, pivot);
@@ -287,11 +303,13 @@ public class game_controller_script : MonoBehaviour {
     void levelLoaded()
     {
         suddenDeathTimer = timeToSuddenDeath;
-        if (inSuddenDeath)
-        {
-            setHealth(prevPlayerHP);
-            inSuddenDeath = false;
-        }
+        inSuddenDeath = false;
+        //enable the following if using TRUEsuddenDeath;
+        //if (inSuddenDeath)
+        //{
+        //    setHealth(prevPlayerHP);
+        //    inSuddenDeath = false;
+        //}
         player1.GameStarted();
         player2.GameStarted();
         showLoadingScreen(false);

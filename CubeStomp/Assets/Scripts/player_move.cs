@@ -47,6 +47,10 @@ public class player_move : MonoBehaviour
     [SerializeField]
     float dashCD = 3f;
     float dashCDTimer;
+    [SerializeField]
+    float suddenDeathDamage;
+    bool inSuddenDeath;
+    private float deathSize = 0.01f;
 
     [Header("Touch Controls")]
     public touch_joystick_script joystick_script;
@@ -88,13 +92,14 @@ public class player_move : MonoBehaviour
         {
             playerNum = 2;
         }
+        inSuddenDeath = false;
     }
 
     void Update()
     {
         checkIfCanJump();
         setAnimations();
-
+        suddenDeath();
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         getKeyInput();
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
@@ -250,6 +255,13 @@ public class player_move : MonoBehaviour
         return temp;
     }
 
+    private void suddenDeath()
+    {
+        if (inSuddenDeath && transform.localScale.y > deathSize)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - suddenDeathDamage, transform.localScale.z);
+        }
+    }
     //Reset position and health
     /*If this isn't working, make sure that in game scene the UI canvas element is unchecked and everything else under it is enabled*/
     void resetPlayer()
@@ -262,7 +274,7 @@ public class player_move : MonoBehaviour
             collisions[i] = TAGS.NONE;
         }
         gameObject.SetActive(true);
-
+        inSuddenDeath = false;
     }
 
     //Checks through collisions to see if the player can jump
@@ -317,19 +329,24 @@ public class player_move : MonoBehaviour
             //Start damage anim StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
             //==Add screenshot code here==//
-            if (transform.localScale.y < 0.2 && transform.localScale.y > (0.2 - 0.5 / maxHealth))
+            if (transform.localScale.y < 0.1)
             {
                 gcs.captureScreen(playerNum);
                 Debug.Log("Capturing Screen");
             }
-            if (transform.localScale.y < 0.01)
+            if (transform.localScale.y < deathSize)
             {
-                gcs.playerLost(playerNum);
-                gameObject.SetActive(false);
+                die();
             }
+
         }
     }
 
+    void die()
+    {
+        gcs.playerLost(playerNum);
+        gameObject.SetActive(false);
+    }
     //Move player down until they hit the floor or opponent.
     void smash()
     {
@@ -488,7 +505,10 @@ public class player_move : MonoBehaviour
             doubleJump = false;
         }
     }
-
+    public void suddenDeathDrain()
+    {
+        inSuddenDeath = true;
+    }
     void jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, 0.0f);
