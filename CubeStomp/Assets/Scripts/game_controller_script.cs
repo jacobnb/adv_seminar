@@ -17,6 +17,12 @@ public class game_controller_script : MonoBehaviour {
     [Header("Dev Vars")]
     [SerializeField] //for dev
     private int firstLevelToLoad;
+    [SerializeField]
+    private float timeToSuddenDeath = 30;
+    [SerializeField]
+    private float suddenDeathTimer;
+    private float prevPlayerHP; //to reset after sudden death.
+    private bool inSuddenDeath = false;
     [Tooltip("singleton variable")]
     public static game_controller_script GAME_CONTROLLER;
     int player1Score, player2Score;

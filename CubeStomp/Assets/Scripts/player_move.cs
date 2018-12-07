@@ -54,7 +54,7 @@ public class player_move : MonoBehaviour
     [SerializeField]
     float suddenDeathDamage;
     bool inSuddenDeath;
-    private float deathSize = 0.01f;
+    private float deathSize = 0.02f;
 
     [Header("Touch Controls")]
     public touch_joystick_script joystick_script;
@@ -260,7 +260,7 @@ public class player_move : MonoBehaviour
 
     private void suddenDeath()
     {
-        if (inSuddenDeath && transform.localScale.y > deathSize)
+        if (inSuddenDeath && transform.localScale.y > deathSize*4f)
         {
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - suddenDeathDamage, transform.localScale.z);
         }
@@ -331,11 +331,7 @@ public class player_move : MonoBehaviour
         {
             //Start damage anim StartCoroutine(cubeSpitter.spawnCubes());
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f/maxHealth, transform.localScale.z);
-            if (transform.localScale.y < 0.01)
-            {
-                gcs.playerLost(playerNum);
-                gameObject.SetActive(false);
-            }
+           
             //==Add screenshot code here==//
             if(transform.localScale.y < 0.2 && transform.localScale.y > (0.2 - 0.5 / maxHealth))
             {

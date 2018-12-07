@@ -2437,6 +2437,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstLevelToLoad: 1
+  timeToSuddenDeath: 15
+  suddenDeathTimer: 0
   scoreToWin: 3
   uiCanvas: {fileID: 1684068333}
   cinemachine_script: {fileID: 1923244478}
@@ -2920,11 +2922,12 @@ MonoBehaviour:
   jumpHeight: 900
   smashSpeed: 100
   frozenTime: 0.25
-  wallSlideSpeed: -2
+  wallSlideSpeed: 0.5
   wallJumpForce: 10
   dashKeypressTime: 0.4
   dashSpeed: 5000
   dashCD: 2
+  suddenDeathDamage: 0.001
   joystick_script: {fileID: 1731859334}
   upButton_script: {fileID: 1248762716}
   downButton_script: {fileID: 1619430310}
@@ -4051,11 +4054,12 @@ MonoBehaviour:
   jumpHeight: 900
   smashSpeed: 100
   frozenTime: 0.25
-  wallSlideSpeed: -2
-  wallJumpForce: 0
+  wallSlideSpeed: 0.5
+  wallJumpForce: 10
   dashKeypressTime: 0.4
   dashSpeed: 5000
   dashCD: 2
+  suddenDeathDamage: 0.001
   joystick_script: {fileID: 436433929}
   upButton_script: {fileID: 564169203}
   downButton_script: {fileID: 1248493527}
