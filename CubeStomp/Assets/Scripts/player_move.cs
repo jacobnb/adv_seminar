@@ -70,6 +70,10 @@ public class player_move : MonoBehaviour
     private player_anim_script anim_script;
     private game_controller_script gcs;
     private Rigidbody2D rb;
+    [SerializeField]
+    private AudioClip stompSound;
+    [SerializeField]
+    private AudioSource audioSource;
 
     //Reset and health vars
     float maxHealth = 50;
@@ -278,6 +282,7 @@ public class player_move : MonoBehaviour
         }
         gameObject.SetActive(true);
         inSuddenDeath = false;
+        isSmashing = false;
     }
 
     //Checks through collisions to see if the player can jump
@@ -356,6 +361,7 @@ public class player_move : MonoBehaviour
     {
         rb.velocity = new Vector2(0.0f, 0.0f);
         rb.AddForce(new Vector2(0f, -smashSpeed));
+        audioSource.PlayOneShot(stompSound);
         //Code to stun the player below on smash.
         //raycast down, if hit player freeze player.
         //Vector2 boxSize = new Vector2(gameObject.GetComponent<BoxCollider2D>().bounds.size.x, 
